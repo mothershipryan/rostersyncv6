@@ -1,0 +1,5 @@
+{
+  "name": "RosterSyncv5",
+  "description": "An AI-powered tool to extract, normalize, and format sports team rosters for professional broadcast and media asset management systems like Iconik. Utilizes Gemini with Google Search grounding for high-fidelity data.",
+  "requestFramePermissions": []
+}

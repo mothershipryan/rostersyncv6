@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RosterSync - AI-Powered Roster Management for Iconik</title>
+    <meta name="description" content="Extract, verify, and sync sports rosters to Iconik MAM with AI-powered precision. Powered by Google Gemini." />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    
+    <style>
+        /* Loading screen styles */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #020617 100%);
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .loader-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 1.5rem;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 60px rgba(99, 102, 241, 0.4);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        .loader-logo svg {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+        
+        .loader-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .loader-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .loader-bar-inner {
+            height: 100%;
+            width: 40%;
+            background: linear-gradient(90deg, #6366f1, #a855f7, #06b6d4, #6366f1);
+            background-size: 200% 100%;
+            border-radius: 2px;
+            animation: shimmer 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { 
+                box-shadow: 0 0 40px rgba(99, 102, 241, 0.3), 0 0 80px rgba(99, 102, 241, 0.1);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 60px rgba(99, 102, 241, 0.5), 0 0 120px rgba(99, 102, 241, 0.2);
+                transform: scale(1.02);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); background-position: 0% 50%; }
+            100% { transform: translateX(350%); background-position: 200% 50%; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes slide-up-fade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes scale-in {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-gradient { background-size: 200% 200%; animation: gradient-shift 8s ease infinite; }
+        .animate-slide-up { animation: slide-up-fade 0.5s ease-out forwards; }
+        .animate-scale-in { animation: scale-in 0.3s ease-out forwards; }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .animate-spin { animation: spin 1s linear infinite; }
+        
+        @keyframes fade-in { 
+            0% { opacity: 0; } 
+            100% { opacity: 1; } 
+        }
+        .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
+        
+        @keyframes slide-in-from-bottom {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-in-from-bottom { animation: slide-in-from-bottom 0.5s ease-out forwards; }
+    </style>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        slate: {
+                            950: '#020617'
+                        },
+                        primary: '#6366f1',
+                        accent: '#06b6d4',
+                    },
+                    boxShadow: {
+                        'glow-primary': '0 0 20px 0 rgba(99, 102, 241, 0.35)',
+                        'glow-accent': '0 0 20px 0 rgba(6, 182, 212, 0.35)',
+                    },
+                    animation: {
+                        'fade-in': 'fade-in 0.5s ease-out forwards',
+                        'slide-in-from-bottom': 'slide-in-from-bottom 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        'fade-in': {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        'slide-in-from-bottom': {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    }
+                }
+            },
+            plugins: [],
+        }
+    </script>
+    <script src="https://cdn.tailwindcss.com/3.4.1?plugins=forms"></script>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "i18next": "https://esm.sh/i18next@^25.7.3",
+    "react-i18next": "https://esm.sh/react-i18next@^16.5.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.89.0",
+    "@vercel/node": "https://esm.sh/@vercel/node@^5.5.16",
+    "resend": "https://esm.sh/resend@^6.6.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-slate-950 text-white font-sans">
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader-container">
+            <div class="loader-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+            </div>
+            <div class="loader-text">RosterSync</div>
+            <div class="loader-bar">
+                <div class="loader-bar-inner"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+    
+    <script>
+        // Hide loading screen when app is ready
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen) {
+                    loadingScreen.classList.add('hidden');
+                }
+            }, 800);
+        });
+    </script>
+</body>
+</html>
