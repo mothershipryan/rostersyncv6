@@ -147,20 +147,22 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
                             </div>
                         </div>
 
-                        {/* Sample Teams */}
-                        <div className="mt-10">
-                            <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-4">Try these examples</p>
-                            <div className="flex flex-wrap items-center justify-center gap-2">
-                                {['Liverpool FC', 'Dallas Cowboys', 'Los Angeles Lakers', 'New York Yankees'].map((team) => (
-                                    <button
-                                        key={team}
-                                        onClick={() => handleExtraction(team)}
-                                        className="px-4 py-2 rounded-full text-sm font-medium text-gray-300 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:text-white transition-all duration-300"
-                                    >
-                                        {team}
-                                    </button>
-                                ))}
-                            </div>
+                        {/* Search Tips */}
+                        <div className="mt-12 max-w-lg mx-auto p-8 rounded-2xl bg-white/5 border border-white/10 text-left animate-slide-up" style={{ animationDelay: '200ms' }}>
+                            <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                                Search Tips:
+                            </h3>
+                            <ul className="space-y-4">
+                                <li className="text-gray-300 text-sm leading-relaxed">
+                                    1. <strong>Be Specific</strong>: "Lakers 2024" uses fewer search results than "basketball team california"
+                                </li>
+                                <li className="text-gray-300 text-sm leading-relaxed">
+                                    2. <strong>Use Official Names</strong>: "Manchester United" is better than "Man U red devils"
+                                </li>
+                                <li className="text-gray-300 text-sm leading-relaxed">
+                                    3. <strong>Specify Gender/Level</strong>: "Duke Women's Soccer" avoids ambiguity and extra searches
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
