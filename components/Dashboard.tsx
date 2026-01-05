@@ -18,12 +18,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
     const [error, setError] = useState<string | null>(null);
     const [targetTeam, setTargetTeam] = useState<string>('');
 
-    useEffect(() => {
-        if (!activeRoster) {
-            onNewExtractionResult(null);
-            setError(null);
-        }
-    }, [activeRoster, onNewExtractionResult]);
+
 
     const handleExtraction = async (query: string) => {
         setIsLoading(true);

@@ -102,15 +102,15 @@ const ExtractionAnimation: React.FC<ExtractionAnimationProps> = ({ teamName }) =
                                     <div
                                         key={index}
                                         className={`flex items-center gap-3 p-2.5 rounded-xl transition-all duration-300 ${isActive
-                                                ? 'bg-white/5 border border-white/10'
-                                                : ''
+                                            ? 'bg-white/5 border border-white/10'
+                                            : ''
                                             } ${index > currentStep ? 'opacity-40' : 'opacity-100'}`}
                                     >
                                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isCompleted
-                                                ? 'bg-emerald-500/20'
-                                                : isActive
-                                                    ? `bg-gradient-to-br ${step.gradient}`
-                                                    : 'bg-white/5'
+                                            ? 'bg-emerald-500/20'
+                                            : isActive
+                                                ? `bg-gradient-to-br ${step.gradient}`
+                                                : 'bg-white/5'
                                             }`}>
                                             {isCompleted ? (
                                                 <Icons.CheckCircle className="w-4 h-4 text-emerald-400" />
@@ -158,16 +158,16 @@ const ExtractionAnimation: React.FC<ExtractionAnimationProps> = ({ teamName }) =
                                     Live Data Stream
                                 </p>
                                 <div className="space-y-1">
-                                    {codeLines.map((line, i) => (
+                                    {(codeLines || []).map((line, i) => (
                                         <div key={i} className="text-gray-300 animate-fade-in flex">
                                             <span className="text-gray-600 w-6 text-right mr-4 select-none">{i + 1}</span>
                                             <span className={
-                                                line.includes('"target"') ? 'text-cyan-400' :
-                                                    line.includes('"status"') ? 'text-amber-400' :
-                                                        line.includes('"engine"') ? 'text-purple-400' :
-                                                            line.includes('true') ? 'text-emerald-400' :
+                                                line?.includes('"target"') ? 'text-cyan-400' :
+                                                    line?.includes('"status"') ? 'text-amber-400' :
+                                                        line?.includes('"engine"') ? 'text-purple-400' :
+                                                            line?.includes('true') ? 'text-emerald-400' :
                                                                 'text-gray-300'
-                                            }>{line}</span>
+                                            }>{line || ''}</span>
                                         </div>
                                     ))}
                                     <div className="flex">

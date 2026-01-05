@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     define: {
-      'process.env.API_KEY': JSON.stringify(env.API_KEY),
+      'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
       // Fix: Manually define Supabase variables in process.env for the client
       'process.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL),
       'process.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(env.VITE_SUPABASE_ANON_KEY),
@@ -16,12 +16,12 @@ export default defineConfig(({ mode }) => {
     build: {
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
-          output: {
-              manualChunks: {
-                  vendor: ['react', 'react-dom', 'lucide-react'],
-                  utils: ['@google/genai', '@supabase/supabase-js']
-              }
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom', 'lucide-react'],
+            utils: ['@google/genai', '@supabase/supabase-js']
           }
+        }
       }
     },
     server: {
