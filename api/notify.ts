@@ -18,20 +18,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const adminEmail = process.env.ADMIN_EMAIL;
-  // Fallback to onboarding@resend.dev if no verified domain is configured
-  const fromEmail = process.env.FROM_EMAIL || 'onboarding@resend.dev';
-
-  console.log(`[Notify] Attempting to send email. From: ${fromEmail}, To: ${adminEmail}`);
-
   if (!apiKey) {
     console.error('[Notify] Error: Missing RESEND_API_KEY');
     return res.status(500).json({ error: 'Server misconfiguration: Missing Email API Key' });
-  }
-
-  if (!adminEmail) {
-    console.error('[Notify] Error: Missing ADMIN_EMAIL');
-    return res.status(500).json({ error: 'Server misconfiguration: Missing Admin Recipient Email' });
   }
 
   const resend = new Resend(apiKey);
