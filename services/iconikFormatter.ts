@@ -15,7 +15,7 @@ const slugify = (text: string): string => {
 
 export const formatForIconik = (rosterData: ExtractionResult) => {
     const now = new Date().toISOString();
-    
+
     // Defensive coding: Ensure players is an array
     const players = Array.isArray(rosterData.players) ? rosterData.players : [];
     const teamName = rosterData.teamName || "Unknown Team";
@@ -24,7 +24,7 @@ export const formatForIconik = (rosterData: ExtractionResult) => {
         auto_set: true,
         date_created: now,
         date_modified: now,
-        description: "Imported via RosterSync AI from web search",
+        description: "Imported via RosterSync from web search",
         field_type: "drop_down",
         hide_if_not_set: false,
         is_block_field: true,

@@ -272,7 +272,7 @@ const AnimatedFlowCard = () => {
                         <div className="flex items-center pt-1">
                             <label className="w-16 text-[10px] text-gray-400 text-right mr-3 flex-shrink-0">Description</label>
                             <div className="flex-1 bg-[#1e2329] text-gray-400 text-[11px] px-3 py-2 rounded border border-white/10">
-                                Imported via RosterSync AI from web search
+                                Imported via RosterSync from web search
                             </div>
                         </div>
                     </div>
