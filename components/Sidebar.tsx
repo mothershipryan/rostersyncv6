@@ -70,8 +70,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                     onNavigate(page);
                 }}
                 className={`group flex items-center w-full px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 relative overflow-hidden ${isActive
-                        ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-white shadow-lg shadow-indigo-500/10 border border-indigo-500/20'
-                        : 'text-gray-400 hover:bg-white/5 hover:text-white border border-transparent'
+                    ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-white shadow-lg shadow-indigo-500/10 border border-indigo-500/20'
+                    : 'text-gray-400 hover:bg-white/5 hover:text-white border border-transparent'
                     } ${isCollapsed ? 'justify-center' : ''}`}
                 title={isCollapsed ? label : ''}
             >
@@ -121,17 +121,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
 
             <nav className="flex-1 flex flex-col min-h-0 px-4 py-6">
-                {/* New Extraction Button */}
-                <button
-                    onClick={onNewExtraction}
-                    className={`mb-6 flex items-center justify-center gap-2 w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:shadow-lg hover:shadow-indigo-500/25 hover:-translate-y-0.5 active:translate-y-0 ${isCollapsed ? 'px-3' : 'px-4'}`}
-                >
-                    <Icons.New className="w-5 h-5" />
-                    {!isCollapsed && <span>New Extraction</span>}
-                </button>
-
                 {/* Navigation Links */}
-                <div className="space-y-2 flex-shrink-0">
+                <div className="space-y-1.5 flex-shrink-0">
                     {navItems.map(item => <NavLink key={item.id} page={item.id} icon={item.icon} label={item.label} />)}
                 </div>
 
@@ -175,8 +166,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                                                 key={roster.id}
                                                 onClick={() => onSelectRoster(roster)}
                                                 className={`w-full group flex items-center justify-between text-xs text-left p-2.5 rounded-lg transition-all duration-200 ${activeRosterId === roster.id
-                                                        ? 'bg-gradient-to-r from-cyan-500/15 to-emerald-500/15 text-cyan-400 font-semibold border-l-2 border-cyan-400 rounded-l-none pl-3 shadow-lg shadow-cyan-500/5'
-                                                        : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                                    ? 'bg-gradient-to-r from-cyan-500/15 to-emerald-500/15 text-cyan-400 font-semibold border-l-2 border-cyan-400 rounded-l-none pl-3 shadow-lg shadow-cyan-500/5'
+                                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
                                                     }`}
                                             >
                                                 <span className="truncate">{roster.team_name}</span>
