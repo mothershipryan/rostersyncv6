@@ -83,7 +83,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       console.log(`[Notify] Processing Support Ticket from ${data.email}`);
       const supportResult = await resend.emails.send({
         from: `RosterSync Support <support@rostersync.app>`,
-        to: ['support@rostersync.com'],
+        to: ['support@rostersync.app'],
         subject: `🎫 Support Ticket: ${data.name}`,
         html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
