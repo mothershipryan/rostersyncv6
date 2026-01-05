@@ -34,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // 1. Send Notification to Admin
       const adminResult = await resend.emails.send({
         from: `RosterSync Leads <demo@rostersync.app>`,
-        to: ['demo@rostersync.com'],
+        to: ['demo@rostersync.app'],
         subject: `🚀 New Demo Request: ${data.name} (${data.company})`,
         html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 30px; border-radius: 12px; background-color: #ffffff;">
