@@ -108,8 +108,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ initialView, onClose, onAuthSucce
                     <>
                         {/* Header */}
                         <div className="text-center mb-8">
-                            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 mb-4 shadow-lg shadow-indigo-500/25">
-                                <Icons.Library className="w-7 h-7 text-white" />
+                            <div className="inline-flex items-center justify-center w-16 h-16 mb-4 relative group">
+                                <div className="absolute inset-0 bg-indigo-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                <img src="/logo.png" alt="RosterSync" className="relative w-full h-full object-contain" />
                             </div>
                             <h2 className="font-display text-2xl font-bold text-white">
                                 {isLogin ? 'Welcome Back' : 'Create Account'}

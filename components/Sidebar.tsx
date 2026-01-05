@@ -101,16 +101,14 @@ const Sidebar: React.FC<SidebarProps> = ({
             <div className="flex items-center justify-center h-20 border-b border-white/5 px-4 flex-shrink-0">
                 {isCollapsed ? (
                     <div className="relative group">
-                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                        <span className="relative text-2xl font-display font-bold gradient-text">RS</span>
+                        <div className="absolute inset-0 bg-indigo-500/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <img src="/logo.png" alt="RS" className="relative w-10 h-10 object-contain transform group-hover:scale-110 transition-transform duration-500" />
                     </div>
                 ) : (
                     <div className="flex items-center gap-3">
-                        <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 blur-md opacity-50"></div>
-                            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
-                                <Icons.Library className="w-5 h-5 text-white" />
-                            </div>
+                        <div className="relative group">
+                            <div className="absolute inset-0 bg-indigo-500/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <img src="/logo.png" alt="RosterSync" className="relative w-10 h-10 object-contain" />
                         </div>
                         <div>
                             <h1 className="text-lg font-display font-bold gradient-text">RosterSync</h1>
