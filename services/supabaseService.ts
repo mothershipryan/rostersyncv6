@@ -86,7 +86,7 @@ export const supabaseService = {
         if (error) return { data: [], error: error.message };
         return { data: data as SavedRoster[], error: null };
     },
-    
+
     async saveRoster(userId: string, teamName: string, sport: string, data: ExtractionResult): Promise<SavedRoster | null> {
         const { data: result, error } = await supabaseClient
             .from('saved_rosters')
@@ -104,7 +104,7 @@ export const supabaseService = {
         if (error) return null;
         return result as SavedRoster;
     },
-    
+
     async deleteRoster(rosterId: string, userId: string): Promise<{ error: Error | null }> {
         const { error } = await supabaseClient.from('saved_rosters').delete().eq('id', rosterId).eq('user_id', userId);
         return { error };
@@ -118,7 +118,7 @@ export const supabaseService = {
         if (error) return null;
         return result as SavedRoster;
     },
-    
+
     async getActivityLogs(userId: string): Promise<{ data: ActivityLog[], error: string | null }> {
         const { data, error } = await supabaseClient.from('activity_logs').select('*').eq('user_id', userId).order('timestamp', { ascending: false });
         if (error) return { data: [], error: error.message };
@@ -132,6 +132,10 @@ export const supabaseService = {
     },
 
     async saveDemoRequest(formData: { name: string; email: string; phone: string; company: string; notes: string }): Promise<{ error: Error | null }> {
+        // Result hold
+        let dbError = null;
+
+        // 1. Try to save to Supabase
         const { error } = await supabaseClient
             .from('demo')
             .insert({
@@ -142,8 +146,13 @@ export const supabaseService = {
                 notes: formData.notes
             });
 
-        if (!error) {
-            // Trigger Email Notification
+        if (error) {
+            console.error('[Supabase] Demo Request Insert Failed:', error);
+            dbError = error;
+        }
+
+        // 2. Always try to send Email Notification (don't block on DB failure)
+        try {
             fetch('/api/notify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -152,20 +161,34 @@ export const supabaseService = {
                 if (!res.ok) {
                     const errBody = await res.json();
                     console.error("[Notify] Demo Request Email Failed:", errBody);
+                } else {
+                    console.log("[Notify] Demo Request Email Sent Successfully");
                 }
             }).catch(e => console.error("[Notify] Demo Request Network Error:", e));
+        } catch (e) {
+            console.error("[Notify] Critical Error sending email:", e);
         }
+
+        return { error: dbError };
 
         return { error };
     },
 
     async saveSupportTicket(formData: { name: string; email: string; message: string }): Promise<{ error: Error | null }> {
+        // Result hold
+        let dbError = null;
+
         const { error } = await supabaseClient
             .from('support_tickets')
             .insert({ full_name: formData.name, email: formData.email, message: formData.message });
-        
-        if (!error) {
-            // Trigger Email Notification
+
+        if (error) {
+            console.error('[Supabase] Support Ticket Insert Failed:', error);
+            dbError = error;
+        }
+
+        // 2. Always try to send Email Notification
+        try {
             fetch('/api/notify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -174,9 +197,14 @@ export const supabaseService = {
                 if (!res.ok) {
                     const errBody = await res.json();
                     console.error("[Notify] Support Ticket Email Failed:", errBody);
+                } else {
+                    console.log("[Notify] Support Ticket Email Sent Successfully");
                 }
             }).catch(e => console.error("[Notify] Support Ticket Network Error:", e));
+        } catch (e) {
+            console.error("[Notify] Critical Error sending email:", e);
         }
+
         return { error };
     }
 };
