@@ -363,7 +363,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignUpClick }
                     </h2>
 
                     <p className="max-w-2xl mx-auto mt-6 text-lg text-gray-400 leading-relaxed">
-                        Leverage Google's Gemini to extract, normalize, and format high-fidelity athlete data from the web, directly into your MAM. Eliminate manual data entry with multi-source verification.
+                        Leverage Google's Gemini to extract, normalize, and format high-fidelity athlete data from the web, directly into your MAM. Eliminate manual data entry, ensure broadcast-level accuracy with multi-source verification, and sync production-ready metadata in seconds.
                     </p>
 
                     {/* Demo Card */}
