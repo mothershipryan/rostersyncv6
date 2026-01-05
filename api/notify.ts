@@ -44,7 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       // 1. Send Notification to Admin
       const adminResult = await resend.emails.send({
-        from: `RosterSync Leads <${fromEmail}>`,
+        from: `RosterSync Leads <demo@rostersync.app>`,
         to: ['demo@rostersync.com'],
         subject: `🚀 New Demo Request: ${data.name} (${data.company})`,
         html: `
@@ -71,7 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // 2. Send Confirmation to the User
       // Note: This only works on Resend trial if the user's email is your verified test email
       const userResult = await resend.emails.send({
-        from: `RosterSync <${fromEmail}>`,
+        from: `RosterSync <demo@rostersync.app>`,
         to: [data.email],
         subject: `RosterSync Demo Scheduled: We've received your request!`,
         html: `
@@ -93,7 +93,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } else if (type === 'support_ticket') {
       console.log(`[Notify] Processing Support Ticket from ${data.email}`);
       const supportResult = await resend.emails.send({
-        from: `RosterSync Support <${fromEmail}>`,
+        from: `RosterSync Support <support@rostersync.app>`,
         to: ['support@rostersync.com'],
         subject: `🎫 Support Ticket: ${data.name}`,
         html: `
