@@ -329,9 +329,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignUpClick }
             {/* Header */}
             <header className="fixed top-0 left-0 right-0 p-5 flex justify-between items-center z-50 glass-subtle">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 relative group">
-                        <div className="absolute inset-0 bg-indigo-500/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <img src="/logo.png" alt="RosterSync" className="relative w-full h-full object-contain" />
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+                        <Icons.Library className="w-5 h-5 text-white" />
                     </div>
                     <h1 className="text-lg font-display font-bold gradient-text">RosterSync</h1>
                 </div>
@@ -489,8 +488,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignUpClick }
             <footer className="border-t border-white/5 bg-slate-950/80 backdrop-blur-sm py-12">
                 <div className="container mx-auto px-6 flex flex-col items-center">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 relative">
-                            <img src="/logo.png" alt="RosterSync" className="w-full h-full object-contain" />
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                            <Icons.Library className="w-4 h-4 text-white" />
                         </div>
                         <h1 className="text-lg font-display font-bold text-white">RosterSync</h1>
                     </div>
