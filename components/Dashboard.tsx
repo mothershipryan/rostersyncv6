@@ -150,21 +150,21 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
                         </p>
 
                         {/* Search Tips */}
-                        <div className="mt-10 max-w-xl mx-auto p-6 rounded-2xl bg-white/5 border border-white/10 text-left" style={{ animationDelay: '200ms' }}>
-                            <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-                                <Icons.Search className="w-4 h-4 text-indigo-400" />
+                        <div className="mt-10 max-w-xl mx-auto p-4 rounded-2xl bg-white/5 border border-white/10 text-left" style={{ animationDelay: '200ms' }}>
+                            <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                                <Icons.Search className="w-3.5 h-3.5 text-indigo-400" />
                                 Search Tips:
                             </h3>
-                            <ul className="space-y-4">
-                                <li className="text-gray-300 text-sm leading-relaxed flex gap-3">
+                            <ul className="space-y-1">
+                                <li className="text-gray-300 text-xs leading-snug flex gap-2">
                                     <span className="font-bold text-indigo-400 flex-shrink-0">1.</span>
                                     <span><strong>Be Specific</strong>: "Lakers 2024" uses fewer search results than "basketball team california"</span>
                                 </li>
-                                <li className="text-gray-300 text-sm leading-relaxed flex gap-3">
+                                <li className="text-gray-300 text-xs leading-snug flex gap-2">
                                     <span className="font-bold text-indigo-400 flex-shrink-0">2.</span>
                                     <span><strong>Use Official Names</strong>: "Manchester United" is better than "Man U red devils"</span>
                                 </li>
-                                <li className="text-gray-300 text-sm leading-relaxed flex gap-3">
+                                <li className="text-gray-300 text-xs leading-snug flex gap-2">
                                     <span className="font-bold text-indigo-400 flex-shrink-0">3.</span>
                                     <span><strong>Specify Gender/Level</strong>: "Duke Women's Soccer" avoids ambiguity and extra searches</span>
                                 </li>
