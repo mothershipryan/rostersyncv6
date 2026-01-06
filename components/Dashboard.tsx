@@ -83,21 +83,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
                         </p>
                     </div>
 
-                    {/* Quick Stats */}
-                    <div className="flex items-center gap-3">
-                        <div className="glass-card rounded-2xl px-4 py-3 flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/20">
-                                <Icons.Activity className="w-5 h-5 text-indigo-400" />
-                            </div>
-                            <div>
-                                <p className="text-xs text-gray-400 uppercase tracking-wider font-medium">Status</p>
-                                <div className="flex items-center gap-1.5">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                                    <p className="text-sm font-semibold text-white">Ready</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </header>
 
