@@ -35,7 +35,6 @@ const CommandHub: React.FC<CommandHubProps> = ({ onExtract, isLoading, onOpenImp
                             <Icons.Search className="w-3.5 h-3.5 text-indigo-400" />
                         </div>
                         <span className="text-xs font-semibold text-gray-300 tracking-wide">Extraction Hub</span>
-                        <span className="badge badge-primary text-[9px] py-0.5">AI-Powered</span>
                     </div>
 
                     {onOpenImport && (
@@ -95,22 +94,7 @@ const CommandHub: React.FC<CommandHubProps> = ({ onExtract, isLoading, onOpenImp
                             </div>
                         </div>
 
-                        {/* Footer info */}
-                        <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                            <p className="text-xs text-gray-500 flex items-center gap-2">
-                                <div className="flex items-center gap-1.5 text-emerald-400/80">
-                                    <Icons.CheckCircle className="w-3.5 h-3.5" />
-                                    <span className="font-medium">Gemini 1.5 Flash</span>
-                                </div>
-                                <span className="text-gray-600">•</span>
-                                <span>Multi-source verification enabled</span>
-                            </p>
 
-                            <div className="flex items-center gap-2 text-[10px] text-gray-500 uppercase tracking-wider font-medium">
-                                <span>Supports</span>
-                                <span className="text-gray-400">NFL • NBA • MLB • NHL • MLS • EPL</span>
-                            </div>
-                        </div>
                     </form>
                 </div>
             </div>

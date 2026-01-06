@@ -166,14 +166,6 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
                         {/* Feature Pills */}
                         <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
                             <div className="badge badge-primary">
-                                <Icons.CheckCircle className="w-3 h-3 mr-1.5" />
-                                Multi-Source Verified
-                            </div>
-                            <div className="badge badge-success">
-                                <Icons.Activity className="w-3 h-3 mr-1.5" />
-                                Real-Time Data
-                            </div>
-                            <div className="badge badge-primary">
                                 <Icons.Shield className="w-3 h-3 mr-1.5" />
                                 Iconik Ready
                             </div>
