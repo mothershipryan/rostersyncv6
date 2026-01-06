@@ -1,15 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { Icons } from './icons';
 
-const LIVERPOOL_PLAYERS = [
-    { name: "Alisson Becker", position: "GK" },
-    { name: "Trent Alexander-Arnold", position: "RB" },
-    { name: "Virgil van Dijk", position: "CB" },
-    { name: "Mohamed Salah", position: "RW" },
-    { name: "Darwin Núñez", position: "ST" },
-    { name: "Luis Díaz", position: "LW" },
-    { name: "Alexis Mac Allister", position: "CM" },
-    { name: "Dominik Szoboszlai", position: "CM" }
+const TEAMS = [
+    {
+        name: "San Francisco 49ers",
+        league: "NFL",
+        fieldName: "san-francisco-49ers",
+        players: [
+            { name: "Brock Purdy", position: "QB" },
+            { name: "Christian McCaffrey", position: "RB" },
+            { name: "Nick Bosa", position: "DE" },
+            { name: "Deebo Samuel", position: "WR" },
+            { name: "George Kittle", position: "TE" },
+            { name: "Trent Williams", position: "LT" },
+            { name: "Fred Warner", position: "LB" },
+            { name: "Brandon Aiyuk", position: "WR" }
+        ]
+    },
+    {
+        name: "Liverpool FC",
+        league: "Premier League",
+        fieldName: "liverpool-fc",
+        players: [
+            { name: "Alisson Becker", position: "GK" },
+            { name: "Trent Alexander-Arnold", position: "RB" },
+            { name: "Virgil van Dijk", position: "CB" },
+            { name: "Mohamed Salah", position: "RW" },
+            { name: "Darwin Núñez", position: "ST" },
+            { name: "Luis Díaz", position: "LW" },
+            { name: "Alexis Mac Allister", position: "CM" },
+            { name: "Dominik Szoboszlai", position: "CM" }
+        ]
+    },
+    {
+        name: "Los Angeles Dodgers",
+        league: "MLB",
+        fieldName: "los-angeles-dodgers",
+        players: [
+            { name: "Shohei Ohtani", position: "DH" },
+            { name: "Mookie Betts", position: "RF" },
+            { name: "Freddie Freeman", position: "1B" },
+            { name: "Will Smith", position: "C" },
+            { name: "Max Muncy", position: "3B" },
+            { name: "Tyler Glasnow", position: "SP" },
+            { name: "Teoscar Hernández", position: "LF" },
+            { name: "Gavin Lux", position: "2B" }
+        ]
+    }
 ];
 
 type WorkflowStep =
@@ -28,7 +65,10 @@ const WorkflowDemo: React.FC = () => {
     const [step, setStep] = useState<WorkflowStep>('idle');
     const [typedText, setTypedText] = useState('');
     const [visiblePlayers, setVisiblePlayers] = useState(0);
-    const targetText = "Liverpool FC";
+    const [teamIndex, setTeamIndex] = useState(0);
+
+    const currentTeam = TEAMS[teamIndex];
+    const targetText = currentTeam.name;
 
     // Main workflow state machine
     useEffect(() => {
@@ -69,6 +109,7 @@ const WorkflowDemo: React.FC = () => {
                 timeout = setTimeout(() => {
                     setTypedText('');
                     setVisiblePlayers(0);
+                    setTeamIndex((prev) => (prev + 1) % TEAMS.length);
                     setStep('idle');
                 }, 5000);
                 break;
@@ -89,13 +130,13 @@ const WorkflowDemo: React.FC = () => {
 
     // Player reveal animation
     useEffect(() => {
-        if (step === 'results' && visiblePlayers < LIVERPOOL_PLAYERS.length) {
+        if (step === 'results' && visiblePlayers < currentTeam.players.length) {
             const timeout = setTimeout(() => {
                 setVisiblePlayers(prev => prev + 1);
             }, 150);
             return () => clearTimeout(timeout);
         }
-    }, [step, visiblePlayers]);
+    }, [step, visiblePlayers, currentTeam.players.length]);
 
     return (
         <div className="relative w-full max-w-4xl mx-auto">
@@ -157,7 +198,7 @@ const WorkflowDemo: React.FC = () => {
                                         <Icons.Search className="w-8 h-8 text-white" />
                                     </div>
                                 </div>
-                                <p className="text-white font-semibold mb-1">Extracting Liverpool FC Roster</p>
+                                <p className="text-white font-semibold mb-1">Extracting {currentTeam.name} Roster</p>
                                 <p className="text-gray-400 text-sm">Multi-source verification in progress...</p>
                             </div>
                         </div>
@@ -170,8 +211,8 @@ const WorkflowDemo: React.FC = () => {
                                 {/* Header with Save Button */}
                                 <div className="flex items-center justify-between mb-6">
                                     <div>
-                                        <h2 className="text-2xl font-bold text-white">Liverpool FC</h2>
-                                        <p className="text-gray-400 text-sm mt-1">Premier League • {visiblePlayers} players extracted</p>
+                                        <h2 className="text-2xl font-bold text-white">{currentTeam.name}</h2>
+                                        <p className="text-gray-400 text-sm mt-1">{currentTeam.league} • {visiblePlayers} players extracted</p>
                                     </div>
                                     <button
                                         className={`btn-primary px-5 py-2.5 flex items-center gap-2 transition-all duration-300 ${step === 'saving' ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
@@ -201,7 +242,7 @@ const WorkflowDemo: React.FC = () => {
                                         <span className="badge badge-success text-[9px] py-0.5">{visiblePlayers} Found</span>
                                     </div>
                                     <div className="p-5 space-y-2 max-h-[280px] overflow-y-auto custom-scrollbar">
-                                        {LIVERPOOL_PLAYERS.slice(0, visiblePlayers).map((player, i) => (
+                                        {currentTeam.players.slice(0, visiblePlayers).map((player, i) => (
                                             <div
                                                 key={i}
                                                 className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-cyan-500/30 transition-all animate-slide-up"
@@ -265,8 +306,8 @@ const WorkflowDemo: React.FC = () => {
                                     </div>
                                 </div>
                                 <h3 className="text-3xl font-bold text-white mb-2">Successfully Synced!</h3>
-                                <p className="text-gray-300 mb-1">Liverpool FC roster is now in Iconik</p>
-                                <p className="text-gray-500 text-sm">8 players • Ready for broadcast</p>
+                                <p className="text-gray-300 mb-1">{currentTeam.name} roster is now in Iconik</p>
+                                <p className="text-gray-500 text-sm">{currentTeam.players.length} players • Ready for broadcast</p>
                             </div>
                         </div>
                     )}
@@ -280,7 +321,7 @@ const WorkflowDemo: React.FC = () => {
                                     <div className="w-7 h-7 rounded bg-white/20 flex items-center justify-center">
                                         <Icons.ChevronDown className="w-4 h-4 text-white" />
                                     </div>
-                                    <span className="font-semibold text-white text-sm">liverpool-fc</span>
+                                    <span className="font-semibold text-white text-sm">{currentTeam.fieldName}</span>
                                 </div>
                                 <Icons.Close className="w-5 h-5 text-white/90 hover:text-white cursor-pointer" />
                             </div>
@@ -291,7 +332,7 @@ const WorkflowDemo: React.FC = () => {
                                 <div className="flex items-center gap-4">
                                     <label className="w-24 text-xs text-gray-400 text-right flex-shrink-0">Label<span className="text-red-400 ml-0.5">*</span></label>
                                     <div className="flex-1 bg-[#1e2329] text-white text-sm px-4 py-2.5 rounded border border-white/20 font-medium">
-                                        Liverpool FC
+                                        {currentTeam.name}
                                     </div>
                                 </div>
 
@@ -309,7 +350,7 @@ const WorkflowDemo: React.FC = () => {
                                     <div className="flex-1 space-y-1">
                                         {/* Player options - two columns */}
                                         <div className="space-y-0.5">
-                                            {LIVERPOOL_PLAYERS.map((player, i) => (
+                                            {currentTeam.players.map((player, i) => (
                                                 <div key={i} className="grid grid-cols-2 gap-x-3 animate-slide-up" style={{ animationDelay: `${i * 60}ms` }}>
                                                     {/* Left column - with drag handle */}
                                                     <div className="flex items-center gap-2 py-2 border-b border-white/10">
