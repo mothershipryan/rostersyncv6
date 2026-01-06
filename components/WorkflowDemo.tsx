@@ -241,7 +241,7 @@ const WorkflowDemo: React.FC = () => {
                                         </div>
                                         <span className="badge badge-success text-[8px] py-0.5">{visiblePlayers} Found</span>
                                     </div>
-                                    <div className="p-4 space-y-1.5 max-h-[240px] overflow-y-auto custom-scrollbar">
+                                    <div className="p-4 space-y-1.5 max-h-[180px]">
                                         {currentTeam.players.slice(0, visiblePlayers).map((player, i) => (
                                             <div
                                                 key={i}
