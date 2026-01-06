@@ -121,7 +121,7 @@ const WorkflowDemo: React.FC = () => {
                 <div className="relative bg-slate-900/50 min-h-[500px]">
                     {/* Search Input Section */}
                     <div className={`p-6 transition-all duration-500 ${step === 'success' ? 'opacity-0 -translate-y-4' : 'opacity-100 translate-y-0'}`}>
-                        <div className="max-w-2xl mx-auto">
+                        <div className="max-w-3xl mx-auto">
                             <div className="relative">
                                 <div className="absolute left-4 top-1/2 -translate-y-1/2">
                                     <Icons.Search className={`w-4 h-4 transition-colors duration-300 ${step === 'typing' ? 'text-indigo-400' : 'text-gray-500'}`} />
