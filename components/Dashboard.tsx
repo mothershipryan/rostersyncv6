@@ -163,16 +163,6 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
                             Enter any team name above to begin extracting player rosters using our AI-powered multi-source verification system.
                         </p>
 
-                        {/* Feature Pills */}
-                        <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-                            <div className="badge badge-primary">
-                                <Icons.Shield className="w-3 h-3 mr-1.5" />
-                                Iconik Ready
-                            </div>
-                        </div>
-
-
-
                         {/* Search Tips */}
                         <div className="mt-12 max-w-lg mx-auto p-8 rounded-2xl bg-white/5 border border-white/10 text-left animate-slide-up" style={{ animationDelay: '200ms' }}>
                             <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
@@ -189,6 +179,13 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
                                     3. <strong>Specify Gender/Level</strong>: "Duke Women's Soccer" avoids ambiguity and extra searches
                                 </li>
                             </ul>
+                        </div>
+
+                        <div className="mt-8 flex justify-center animate-slide-up" style={{ animationDelay: '300ms' }}>
+                            <div className="badge badge-primary px-4 py-2">
+                                <Icons.Shield className="w-3.5 h-3.5 mr-2" />
+                                Iconik Ready
+                            </div>
                         </div>
                     </div>
                 </div>
