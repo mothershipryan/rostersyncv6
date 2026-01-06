@@ -7,7 +7,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST,PUT');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, App-ID, Auth-Token');
-  
+
   // Debug header
   res.setHeader('X-RosterSync-Endpoint', 'gate-v4-auth-flow');
 
@@ -24,7 +24,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     // Robust body parsing
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-    const { appId, authToken, iconikUrl, email, password, payload } = body || {};
+    const { appId, authToken, iconikUrl, email, password, payload, action } = body || {};
 
     // App ID is always required for Iconik requests
     if (!appId) {
@@ -34,149 +34,149 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Clean inputs
     const cleanAppId = appId.trim();
     const baseUrl = (iconikUrl || 'https://app.iconik.io').replace(/\/$/, "");
-    
+
     let targetEndpoint = '';
     let fetchOptions: RequestInit = {};
 
     // MODE 1: LOGIN (Simple Auth)
     if (email && password) {
-         console.log(`[Gate] Mode: Login with Email/Password`);
-         targetEndpoint = `${baseUrl}/API/auth/v1/auth/simple/login/`;
-         fetchOptions = {
-             method: 'POST',
-             headers: {
-                 'App-ID': cleanAppId,
-                 'Content-Type': 'application/json',
-                 'Accept': 'application/json'
-             },
-             body: JSON.stringify({ email, password })
-         };
-         
-         const iconikResponse = await fetch(targetEndpoint, fetchOptions);
-         const dataText = await iconikResponse.text();
-         let data;
-         try { data = JSON.parse(dataText); } catch { data = { message: 'Non-JSON response', raw: dataText }; }
-         
-         if (!iconikResponse.ok && typeof data === 'object') {
-            (data as any).targetUrl = targetEndpoint;
-         }
-         return res.status(iconikResponse.status).json(data);
-    } 
+      console.log(`[Gate] Mode: Login with Email/Password`);
+      targetEndpoint = `${baseUrl}/API/auth/v1/auth/simple/login/`;
+      fetchOptions = {
+        method: 'POST',
+        headers: {
+          'App-ID': cleanAppId,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      };
+
+      const iconikResponse = await fetch(targetEndpoint, fetchOptions);
+      const dataText = await iconikResponse.text();
+      let data;
+      try { data = JSON.parse(dataText); } catch { data = { message: 'Non-JSON response', raw: dataText }; }
+
+      if (!iconikResponse.ok && typeof data === 'object') {
+        (data as any).targetUrl = targetEndpoint;
+      }
+      return res.status(iconikResponse.status).json(data);
+    }
     // MODE 2: SYNC (Metadata Field Creation/Update)
     else if (payload && authToken) {
-         console.log(`[Gate] Mode: Sync Metadata (Create/Update)`);
-         const cleanToken = authToken.trim();
-         
-         // 1. Try Create (POST)
-         targetEndpoint = `${baseUrl}/API/metadata/v1/fields/`;
-         fetchOptions = {
-             method: 'POST',
-             headers: {
-                 'App-ID': cleanAppId,
-                 'Auth-Token': cleanToken,
-                 'Accept': 'application/json',
-                 'Content-Type': 'application/json'
-             },
-             body: JSON.stringify(payload)
-         };
-         
-         let iconikResponse = await fetch(targetEndpoint, fetchOptions);
-         
-         // If 409 Conflict, it means the field already exists. We should try to UPDATE (PUT).
-         if (iconikResponse.status === 409 && payload.name) {
-             console.log(`[Gate] Field '${payload.name}' exists (409). Switching to PUT to update.`);
-             targetEndpoint = `${baseUrl}/API/metadata/v1/fields/${payload.name}/`;
-             fetchOptions.method = 'PUT';
-             iconikResponse = await fetch(targetEndpoint, fetchOptions);
-         }
+      console.log(`[Gate] Mode: Sync Metadata (Create/Update)`);
+      const cleanToken = authToken.trim();
 
-         const dataText = await iconikResponse.text();
-         let data;
-         try {
-           data = JSON.parse(dataText);
-         } catch {
-           data = { 
-             message: 'Non-JSON response from Iconik', 
-             raw: dataText.substring(0, 500)
-           };
-         }
+      // 1. Try Create (POST)
+      targetEndpoint = `${baseUrl}/API/metadata/v1/fields/`;
+      fetchOptions = {
+        method: 'POST',
+        headers: {
+          'App-ID': cleanAppId,
+          'Auth-Token': cleanToken,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      };
 
-         if (!iconikResponse.ok) {
-             console.error(`[Gate] Sync Error ${iconikResponse.status}:`, dataText);
-             if (typeof data === 'object' && data !== null) {
-                 (data as any).targetUrl = targetEndpoint;
-                 (data as any).statusCode = iconikResponse.status;
-             }
-         }
+      let iconikResponse = await fetch(targetEndpoint, fetchOptions);
 
-         return res.status(iconikResponse.status).json(data);
+      // If 409 Conflict, it means the field already exists. We should try to UPDATE (PUT).
+      if (iconikResponse.status === 409 && payload.name) {
+        console.log(`[Gate] Field '${payload.name}' exists (409). Switching to PUT to update.`);
+        targetEndpoint = `${baseUrl}/API/metadata/v1/fields/${payload.name}/`;
+        fetchOptions.method = 'PUT';
+        iconikResponse = await fetch(targetEndpoint, fetchOptions);
+      }
+
+      const dataText = await iconikResponse.text();
+      let data;
+      try {
+        data = JSON.parse(dataText);
+      } catch {
+        data = {
+          message: 'Non-JSON response from Iconik',
+          raw: dataText.substring(0, 500)
+        };
+      }
+
+      if (!iconikResponse.ok) {
+        console.error(`[Gate] Sync Error ${iconikResponse.status}:`, dataText);
+        if (typeof data === 'object' && data !== null) {
+          (data as any).targetUrl = targetEndpoint;
+          (data as any).statusCode = iconikResponse.status;
+        }
+      }
+
+      return res.status(iconikResponse.status).json(data);
     }
     // MODE 4: EXPLICIT ACTIONS (Search, Read)
     else if (action && authToken) {
-        const cleanToken = authToken.trim();
-        console.log(`[Gate] Mode: Action '${action}'`);
-        
-        const headers = {
-            'App-ID': cleanAppId,
-            'Auth-Token': cleanToken,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        };
+      const cleanToken = authToken.trim();
+      console.log(`[Gate] Mode: Action '${action}'`);
 
-        if (action === 'search_fields') {
-             const searchQuery = body.query || '';
-             // Search for fields. Note: Iconik API for listing fields supports search param
-             targetEndpoint = `${baseUrl}/API/metadata/v1/fields/?search=${encodeURIComponent(searchQuery)}&page_size=100`;
-             fetchOptions = { method: 'GET', headers };
-        } 
-        else if (action === 'read_field') {
-             const fieldName = body.resourceId;
-             if (!fieldName) return res.status(400).json({ error: 'Missing resourceId for read_field' });
-             targetEndpoint = `${baseUrl}/API/metadata/v1/fields/${fieldName}/`;
-             fetchOptions = { method: 'GET', headers };
-        }
-        else {
-            return res.status(400).json({ error: `Unknown action: ${action}` });
-        }
+      const headers = {
+        'App-ID': cleanAppId,
+        'Auth-Token': cleanToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      };
 
-        const iconikResponse = await fetch(targetEndpoint, fetchOptions);
-        const dataText = await iconikResponse.text();
-        let data;
-        try { data = JSON.parse(dataText); } catch { data = { message: 'Non-JSON response', raw: dataText }; }
-        
-        if (!iconikResponse.ok && typeof data === 'object') {
-             (data as any).targetUrl = targetEndpoint;
-        }
-        return res.status(iconikResponse.status).json(data);
+      if (action === 'search_fields') {
+        const searchQuery = body.query || '';
+        // Search for fields. Note: Iconik API for listing fields supports search param
+        targetEndpoint = `${baseUrl}/API/metadata/v1/fields/?search=${encodeURIComponent(searchQuery)}&page_size=100`;
+        fetchOptions = { method: 'GET', headers };
+      }
+      else if (action === 'read_field') {
+        const fieldName = body.resourceId;
+        if (!fieldName) return res.status(400).json({ error: 'Missing resourceId for read_field' });
+        targetEndpoint = `${baseUrl}/API/metadata/v1/fields/${fieldName}/`;
+        fetchOptions = { method: 'GET', headers };
+      }
+      else {
+        return res.status(400).json({ error: `Unknown action: ${action}` });
+      }
+
+      const iconikResponse = await fetch(targetEndpoint, fetchOptions);
+      const dataText = await iconikResponse.text();
+      let data;
+      try { data = JSON.parse(dataText); } catch { data = { message: 'Non-JSON response', raw: dataText }; }
+
+      if (!iconikResponse.ok && typeof data === 'object') {
+        (data as any).targetUrl = targetEndpoint;
+      }
+      return res.status(iconikResponse.status).json(data);
 
     }
     // MODE 3: VERIFY/PROXY (Token Auth Check) - FALLBACK if no action/payload
     else if (authToken) {
-        const cleanToken = authToken.trim();
-        targetEndpoint = `${baseUrl}/API/users/me`;
-        console.log(`[Gate] Mode: Verify Token`);
-        fetchOptions = {
-             method: 'GET',
-             headers: {
-                 'App-ID': cleanAppId,
-                 'Auth-Token': cleanToken,
-                 'Accept': 'application/json',
-                 'Content-Type': 'application/json'
-             }
-        };
-
-        const iconikResponse = await fetch(targetEndpoint, fetchOptions);
-        const dataText = await iconikResponse.text();
-        let data;
-        try { data = JSON.parse(dataText); } catch { data = { message: 'Non-JSON response', raw: dataText }; }
-
-        if (!iconikResponse.ok && typeof data === 'object') {
-           (data as any).targetUrl = targetEndpoint;
+      const cleanToken = authToken.trim();
+      targetEndpoint = `${baseUrl}/API/users/me`;
+      console.log(`[Gate] Mode: Verify Token`);
+      fetchOptions = {
+        method: 'GET',
+        headers: {
+          'App-ID': cleanAppId,
+          'Auth-Token': cleanToken,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
         }
-        return res.status(iconikResponse.status).json(data);
+      };
+
+      const iconikResponse = await fetch(targetEndpoint, fetchOptions);
+      const dataText = await iconikResponse.text();
+      let data;
+      try { data = JSON.parse(dataText); } catch { data = { message: 'Non-JSON response', raw: dataText }; }
+
+      if (!iconikResponse.ok && typeof data === 'object') {
+        (data as any).targetUrl = targetEndpoint;
+      }
+      return res.status(iconikResponse.status).json(data);
 
     } else {
-        return res.status(400).json({ error: 'Missing credentials. Provide either (App-ID + Auth-Token) or (App-ID + Email + Password).' });
+      return res.status(400).json({ error: 'Missing credentials. Provide either (App-ID + Auth-Token) or (App-ID + Email + Password).' });
     }
 
   } catch (error: any) {
