@@ -47,7 +47,7 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
 
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     let lastError: any;
-    
+
     // Model Strategy:
     // Strictly using gemini-1.5-flash as requested.
     const models = [
@@ -58,7 +58,7 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
     for (let i = 0; i < models.length; i++) {
         const model = models[i];
         try {
-            console.log(`[RosterSync] Attempt ${i+1}/${models.length}: ${model}`);
+            console.log(`[RosterSync] Attempt ${i + 1}/${models.length}: ${model}`);
 
             const config: any = {
                 systemInstruction: SYSTEM_INSTRUCTION,
@@ -72,12 +72,12 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
                 config: config,
             });
             const endTime = Date.now();
-            
+
             if (!response.text) {
-                 if (response.promptFeedback && response.promptFeedback.blockReason) {
-                     throw new Error(`AI Request blocked: ${response.promptFeedback.blockReason}`);
-                 }
-                 throw new Error("AI returned an empty response.");
+                if (response.promptFeedback && response.promptFeedback.blockReason) {
+                    throw new Error(`AI Request blocked: ${response.promptFeedback.blockReason}`);
+                }
+                throw new Error("AI returned an empty response.");
             }
 
             // 1. Clean Response (Strip Markdown Code Blocks if present)
@@ -93,26 +93,26 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
             // 2. Parse JSON with fallback
             let result: any;
             try {
-                 result = JSON.parse(rawText);
+                result = JSON.parse(rawText);
             } catch (e) {
                 console.warn(`[RosterSync] Direct JSON parse failed. Attempting substring extraction.`);
                 // Fallback: Try to find the first '{' and last '}' to handle chatty preambles
                 const firstBrace = rawText.indexOf('{');
                 const lastBrace = rawText.lastIndexOf('}');
-                
+
                 if (firstBrace !== -1 && lastBrace !== -1) {
-                     try {
+                    try {
                         const extractedJson = rawText.substring(firstBrace, lastBrace + 1);
                         result = JSON.parse(extractedJson);
-                     } catch (e2) {
+                    } catch (e2) {
                         console.error(`[RosterSync] JSON Parse Error on model ${model}. Raw text:`, response.text);
                         throw new Error("The AI returned data that could not be parsed.");
-                     }
+                    }
                 } else {
                     throw new Error("The AI returned data that could not be parsed.");
                 }
             }
-            
+
             // 3. Robust Data Validation & DEEP SANITIZATION
             if (!result || typeof result !== 'object') {
                 result = {};
@@ -120,12 +120,12 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
 
             if (!result.teamName) result.teamName = teamQuery;
             if (!result.sport) result.sport = "Unknown Sport";
-            
+
             // Ensure arrays are actually arrays
             if (!Array.isArray(result.players)) {
-                result.players = []; 
+                result.players = [];
             }
-            
+
             // DEEP SANITIZATION: Check strictly if player is an object, handle strings, remove nulls
             result.players = result.players.map((p: any) => {
                 if (!p) return null;
@@ -143,11 +143,11 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
                 return null;
             }).filter((p: any) => p !== null);
 
-            
+
             if (!Array.isArray(result.verifiedSources)) {
                 result.verifiedSources = [];
             }
-            
+
             // SANITIZE SOURCES: Must be valid URLs to prevent new URL() crash in UI
             result.verifiedSources = result.verifiedSources.filter((url: string) => {
                 try {
@@ -157,22 +157,47 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
                     return false;
                 }
             });
-            
+
             if (!result.verificationNotes) {
                 result.verificationNotes = "Extraction completed successfully.";
             }
 
             // 4. Extract Grounding Metadata (Real URLs from Google Search)
-            const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
-            const groundingSources = groundingChunks
-                .map((chunk: any) => chunk.web?.uri)
-                .filter((uri: string) => uri);
+            // Check multiple possible paths for grounding metadata
+            console.log('[RosterSync] Full response structure:', JSON.stringify(response, null, 2));
+
+            let groundingSources: string[] = [];
+
+            // Try to get grounding chunks from various possible locations
+            const groundingChunks =
+                response.candidates?.[0]?.groundingMetadata?.groundingChunks ||
+                response.candidates?.[0]?.grounding_metadata?.grounding_chunks ||
+                response.groundingMetadata?.groundingChunks ||
+                [];
+
+            console.log('[RosterSync] Grounding chunks found:', groundingChunks);
+
+            if (Array.isArray(groundingChunks) && groundingChunks.length > 0) {
+                groundingSources = groundingChunks
+                    .map((chunk: any) => {
+                        // Try multiple possible paths for the URI
+                        return chunk.web?.uri || chunk.web?.url || chunk.uri || chunk.url;
+                    })
+                    .filter((uri: string) => uri && typeof uri === 'string');
+
+                console.log('[RosterSync] Extracted grounding sources:', groundingSources);
+            } else {
+                console.warn('[RosterSync] No grounding chunks found in response');
+            }
 
             // Merge explicit grounding sources
             if (groundingSources.length > 0) {
                 // Add new valid sources and deduplicate
                 const allSources = [...(result.verifiedSources || []), ...groundingSources];
                 result.verifiedSources = [...new Set(allSources)];
+                console.log('[RosterSync] Final verified sources:', result.verifiedSources);
+            } else {
+                console.warn('[RosterSync] No grounding sources to merge');
             }
 
             // 5. Sort Players Safely
@@ -200,10 +225,10 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
             lastError = error;
             const status = error.status || error.code;
             console.warn(`[RosterSync] Model ${model} failed with status ${status}:`, error.message);
-            
+
             // Critical Auth/Request errors should stop immediately
             if (status === 400 || status === 403) {
-                break; 
+                break;
             }
 
             // Exponential backoff
