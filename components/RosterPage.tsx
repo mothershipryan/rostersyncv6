@@ -235,7 +235,7 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
         }
     };
 
-    const handleImportFromIconik = (importedPlayers: Player[], merge: boolean) => {
+    const handleImportFromIconik = (importedPlayers: Player[], merge: boolean, teamName?: string) => {
         let finalPlayers = [...importedPlayers];
 
         if (merge) {

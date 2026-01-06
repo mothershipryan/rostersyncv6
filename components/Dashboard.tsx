@@ -6,6 +6,8 @@ import CommandHub from './CommandHub';
 import ExtractionAnimation from './ExtractionAnimation';
 import { Icons } from './icons';
 import Workspace from './Workspace';
+import IconikImportModal from './IconikImportModal';
+import type { Player } from '../types';
 
 interface DashboardProps {
     activeRoster: ExtractionResult | null;
@@ -17,6 +19,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [targetTeam, setTargetTeam] = useState<string>('');
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
 
 
@@ -35,6 +38,35 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const handleImportFromIconik = (importedPlayers: Player[], merge: boolean, teamName?: string) => {
+        const name = teamName || "Imported Team";
+
+        // Construct a pseudo-ExtractionResult
+        const rosterResult: ExtractionResult = {
+            teamName: name,
+            sport: "Imported",
+            players: importedPlayers,
+            verifiedSources: [],
+            verificationNotes: "Imported directly from Iconik metadata.",
+            meta: {
+                model: "Iconik",
+                totalTokens: 0,
+                promptTokens: 0,
+                candidatesTokens: 0,
+                latencyMs: 0
+            }
+        };
+
+        // For dashboard flow, we don't save immediately, we just set it as active
+        // But the user requested "read it and save".
+        // In the App flow, `onNewExtractionResult` sets `activeRoster`.
+        // Then the user clicks "Save" in Workspace. 
+        // We can just set it as active so they can preview and save.
+
+        onNewExtractionResult(rosterResult);
+        setIsImportModalOpen(false);
     };
 
     return (
@@ -147,6 +179,16 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
                             </div>
                         </div>
 
+                        <div className="mt-8 flex justify-center">
+                            <button
+                                onClick={() => setIsImportModalOpen(true)}
+                                className="btn-secondary flex items-center gap-2 text-sm px-6 py-2"
+                            >
+                                <Icons.Cloud className="w-4 h-4 text-purple-400" />
+                                Or Import existing from Iconik
+                            </button>
+                        </div>
+
                         {/* Search Tips */}
                         <div className="mt-12 max-w-lg mx-auto p-8 rounded-2xl bg-white/5 border border-white/10 text-left animate-slide-up" style={{ animationDelay: '200ms' }}>
                             <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
@@ -166,6 +208,13 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
                         </div>
                     </div>
                 </div>
+            )}
+
+            {isImportModalOpen && (
+                <IconikImportModal
+                    onClose={() => setIsImportModalOpen(false)}
+                    onImport={handleImportFromIconik}
+                />
             )}
         </div>
     );

@@ -7,7 +7,7 @@ import { Player } from '../types';
 
 interface IconikImportModalProps {
     onClose: () => void;
-    onImport: (players: Player[], merge: boolean) => void;
+    onImport: (players: Player[], merge: boolean, teamName?: string) => void;
 }
 
 const IconikImportModal: React.FC<IconikImportModalProps> = ({ onClose, onImport }) => {
@@ -196,14 +196,14 @@ const IconikImportModal: React.FC<IconikImportModalProps> = ({ onClose, onImport
 
                                     <div className="grid grid-cols-2 gap-4 mt-auto">
                                         <button
-                                            onClick={() => onImport(previewData, true)}
+                                            onClick={() => onImport(previewData, true, selectedField?.label)}
                                             className="btn-secondary py-3 justify-center"
                                         >
                                             <Icons.Merge className="w-4 h-4 mr-2" />
                                             Merge into Current
                                         </button>
                                         <button
-                                            onClick={() => onImport(previewData, false)}
+                                            onClick={() => onImport(previewData, false, selectedField?.label)}
                                             className="btn-primary py-3 justify-center bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400"
                                         >
                                             <Icons.Download className="w-4 h-4 mr-2" />
