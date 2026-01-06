@@ -570,69 +570,71 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
                                     </p>
                                 </div>
                             </div>
-                    )}
-                            {/* JSON Tab */}
-                            {activeTab === 'json' && (
-                                <div className="relative group flex-1 flex flex-col rounded-2xl overflow-hidden border border-white/10 bg-[#0d1117] animate-fade-in">
-                                    <div className="absolute left-6 top-6 z-10 flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                                            <Icons.Paste className="w-4 h-4 text-indigo-400" />
-                                        </div>
-                                        <span className="text-xs font-semibold text-white uppercase tracking-wider">Iconik JSON Schema</span>
-                                    </div>
-                                    <button
-                                        onClick={copyJson}
-                                        className={`absolute right-6 top-6 z-10 flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl transition-all ${jsonCopied
-                                            ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25'
-                                            : 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500 hover:text-white'
-                                            }`}
-                                    >
-                                        {jsonCopied ? <Icons.Check className="w-3.5 h-3.5" /> : <Icons.Copy className="w-3.5 h-3.5" />}
-                                        {jsonCopied ? 'Copied!' : 'Copy Schema'}
-                                    </button>
-                                    <div className="flex-1 overflow-y-auto custom-scrollbar">
-                                        <pre className="text-[11px] p-8 pt-20 font-mono leading-relaxed">
-                                            <code className="text-emerald-400">
-                                                {JSON.stringify(iconikPayload, null, 2)}
-                                            </code>
-                                        </pre>
-                                    </div>
-                                </div>
-                            )}
                         </div>
+                    )}
+
+                    {/* JSON Tab */}
+                    {activeTab === 'json' && (
+                        <div className="relative group flex-1 flex flex-col rounded-2xl overflow-hidden border border-white/10 bg-[#0d1117] animate-fade-in">
+                            <div className="absolute left-6 top-6 z-10 flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                                    <Icons.Paste className="w-4 h-4 text-indigo-400" />
+                                </div>
+                                <span className="text-xs font-semibold text-white uppercase tracking-wider">Iconik JSON Schema</span>
+                            </div>
+                            <button
+                                onClick={copyJson}
+                                className={`absolute right-6 top-6 z-10 flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl transition-all ${jsonCopied
+                                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25'
+                                    : 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500 hover:text-white'
+                                    }`}
+                            >
+                                {jsonCopied ? <Icons.Check className="w-3.5 h-3.5" /> : <Icons.Copy className="w-3.5 h-3.5" />}
+                                {jsonCopied ? 'Copied!' : 'Copy Schema'}
+                            </button>
+                            <div className="flex-1 overflow-y-auto custom-scrollbar">
+                                <pre className="text-[11px] p-8 pt-20 font-mono leading-relaxed">
+                                    <code className="text-emerald-400">
+                                        {JSON.stringify(iconikPayload, null, 2)}
+                                    </code>
+                                </pre>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
 
-                {/* Modals */}
-                {isMergeModalOpen && (
-                    <MergeModal
-                        teamName={roster.team_name}
-                        currentPlayers={currentPlayers}
-                        onClose={() => setIsMergeModalOpen(false)}
-                        onConfirmMerge={handleConfirmMerge}
-                    />
-                )}
-
-                {isImportModalOpen && (
-                    <IconikImportModal
-                        onClose={() => setIsImportModalOpen(false)}
-                        onImport={handleImportFromIconik}
-                    />
-                )}
-
-                <ConfirmationModal
-                    isOpen={playerToDelete !== null}
-                    onClose={() => setPlayerToDelete(null)}
-                    onConfirm={handleConfirmSinglePlayerDelete}
-                    title="Delete Player?"
-                    message={<>You are about to permanently delete <strong className="text-white font-semibold">{playerToDelete?.name}</strong> from this roster.</>}
-                    warningTitle="This action is final"
-                    warningMessage="Deleted players must be manually re-added or re-extracted via a season merge. This action *will not* affect your Iconik MAM instance."
-                    confirmText="Yes, Delete Player"
-                    icon={Icons.Delete}
-                    variant="danger"
+            {/* Modals */}
+            {isMergeModalOpen && (
+                <MergeModal
+                    teamName={roster.team_name}
+                    currentPlayers={currentPlayers}
+                    onClose={() => setIsMergeModalOpen(false)}
+                    onConfirmMerge={handleConfirmMerge}
                 />
-            </div>
-            );
+            )}
+
+            {isImportModalOpen && (
+                <IconikImportModal
+                    onClose={() => setIsImportModalOpen(false)}
+                    onImport={handleImportFromIconik}
+                />
+            )}
+
+            <ConfirmationModal
+                isOpen={playerToDelete !== null}
+                onClose={() => setPlayerToDelete(null)}
+                onConfirm={handleConfirmSinglePlayerDelete}
+                title="Delete Player?"
+                message={<>You are about to permanently delete <strong className="text-white font-semibold">{playerToDelete?.name}</strong> from this roster.</>}
+                warningTitle="This action is final"
+                warningMessage="Deleted players must be manually re-added or re-extracted via a season merge. This action *will not* affect your Iconik MAM instance."
+                confirmText="Yes, Delete Player"
+                icon={Icons.Delete}
+                variant="danger"
+            />
+        </div>
+    );
 };
 
-            export default RosterPage;
+export default RosterPage;
