@@ -164,8 +164,6 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
 
             // 4. Extract Grounding Metadata (Real URLs from Google Search)
             // Check multiple possible paths for grounding metadata
-            console.log('[RosterSync] Full response structure:', JSON.stringify(response, null, 2));
-
             let groundingSources: string[] = [];
 
             // Try to get grounding chunks from various possible locations
@@ -195,9 +193,9 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
                 // Add new valid sources and deduplicate
                 const allSources = [...(result.verifiedSources || []), ...groundingSources];
                 result.verifiedSources = [...new Set(allSources)];
-                console.log('[RosterSync] Final verified sources:', result.verifiedSources);
+                console.log('[RosterSync] Final verified sources count:', result.verifiedSources.length);
             } else {
-                console.warn('[RosterSync] No grounding sources to merge');
+                console.log('[RosterSync] Note: Google Search grounding sources not available in this response. The AI may have used its training data instead. Sources in result.verifiedSources:', result.verifiedSources?.length || 0);
             }
 
             // 5. Sort Players Safely
