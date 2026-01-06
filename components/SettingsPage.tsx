@@ -106,7 +106,7 @@ const SettingsPage: React.FC = () => {
         hint?: string;
     }> = ({ id, label, value, onChange, type = 'text', placeholder = '', hint }) => (
         <div>
-            <label htmlFor={id} className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+            <label htmlFor={id} className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
                 {label}
             </label>
             <input
@@ -127,14 +127,14 @@ const SettingsPage: React.FC = () => {
         <div className="space-y-8 pb-10">
             {/* Header */}
             <header>
-                <h1 className="font-display text-4xl font-bold text-white tracking-tight">Settings</h1>
-                <p className="mt-2 text-gray-400 text-base">Configure your Iconik MAM integration</p>
+                <h1 className="font-display text-3xl font-bold text-white tracking-tight">Settings</h1>
+                <p className="mt-1 text-gray-400 text-sm">Configure your Iconik MAM integration</p>
             </header>
 
             {/* Main Settings Card */}
-            <div className="max-w-2xl glass-card rounded-3xl overflow-hidden">
+            <div className="max-w-2xl glass-card rounded-2xl overflow-hidden">
                 {/* Card Header */}
-                <div className="h-14 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-5 gap-4">
+                <div className="h-12 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-5 gap-4">
                     <div className="flex space-x-2">
                         <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
                         <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
@@ -150,16 +150,16 @@ const SettingsPage: React.FC = () => {
                 </div>
 
                 {/* Card Body */}
-                <div className="p-8 space-y-8">
+                <div className="p-6 space-y-6">
                     {/* Login Section */}
                     <div>
-                        <div className="flex items-center gap-3 mb-5">
-                            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center border border-blue-500/20">
-                                <Icons.Logout className="w-4 h-4 text-blue-400 transform -scale-x-100" />
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center border border-blue-500/20">
+                                <Icons.Logout className="w-3.5 h-3.5 text-blue-400 transform -scale-x-100" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-semibold text-white">Quick Login</h3>
-                                <p className="text-xs text-gray-500">Use email & password to fetch a new auth token</p>
+                                <h3 className="text-xs font-semibold text-white">Quick Login</h3>
+                                <p className="text-[10px] text-gray-500">Use email & password to fetch a new auth token</p>
                             </div>
                         </div>
 
@@ -216,18 +216,18 @@ const SettingsPage: React.FC = () => {
                             className="flex-1 btn-secondary flex items-center justify-center gap-2"
                         >
                             {connectionStatus === 'testing' ? (
-                                <Icons.Loader className="w-5 h-5 animate-spin" />
+                                <Icons.Loader className="w-4 h-4 animate-spin" />
                             ) : (
-                                <Icons.Activity className="w-5 h-5 text-cyan-400" />
+                                <Icons.Activity className="w-4 h-4 text-cyan-400" />
                             )}
-                            <span>{username && password ? 'Login & Test' : 'Test Connection'}</span>
+                            <span className="text-sm">{username && password ? 'Login & Test' : 'Test Connection'}</span>
                         </button>
                         <button
                             onClick={handleSave}
                             className="flex-1 btn-primary flex items-center justify-center gap-2"
                         >
-                            <Icons.Save className="w-5 h-5" />
-                            <span>Save Settings</span>
+                            <Icons.Save className="w-4 h-4" />
+                            <span className="text-sm">Save Settings</span>
                         </button>
                     </div>
 
@@ -238,9 +238,9 @@ const SettingsPage: React.FC = () => {
                             : 'bg-red-500/10 border border-red-500/20'
                             }`}>
                             {connectionStatus === 'success' ? (
-                                <Icons.CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                                <Icons.CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                             ) : (
-                                <Icons.Error className="w-5 h-5 text-red-400 flex-shrink-0" />
+                                <Icons.Error className="w-4 h-4 text-red-400 flex-shrink-0" />
                             )}
                             <p className={`text-sm ${connectionStatus === 'success' ? 'text-emerald-300' : 'text-red-300'}`}>
                                 {connectionMessage}
@@ -256,28 +256,28 @@ const SettingsPage: React.FC = () => {
                     <div className="flex-shrink-0">
                         <div className="relative">
                             <div className="absolute inset-0 bg-emerald-500 blur-xl opacity-30"></div>
-                            <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg">
-                                <Icons.Shield className="w-6 h-6 text-white" />
+                            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg">
+                                <Icons.Shield className="w-5 h-5 text-white" />
                             </div>
                         </div>
                     </div>
                     <div>
-                        <h2 className="text-lg font-semibold text-white">Zero-Knowledge Security</h2>
-                        <p className="text-gray-400 mt-1.5 text-sm leading-relaxed">
+                        <h2 className="text-base font-semibold text-white">Zero-Knowledge Security</h2>
+                        <p className="text-gray-400 mt-1 text-xs leading-relaxed">
                             Your Iconik Auth Token is encrypted with AES-256 and stored only in your browser's local storage.
                             Your unique encryption key never leaves your device — we never see or store your credentials on our servers.
                         </p>
-                        <div className="flex items-center gap-4 mt-4">
-                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                                <Icons.CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4">
+                            <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
+                                <Icons.CheckCircle className="w-3 h-3 text-emerald-400" />
                                 <span>AES-256 Encryption</span>
                             </div>
-                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                                <Icons.CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                            <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
+                                <Icons.CheckCircle className="w-3 h-3 text-emerald-400" />
                                 <span>Client-Side Only</span>
                             </div>
-                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                                <Icons.CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                            <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
+                                <Icons.CheckCircle className="w-3 h-3 text-emerald-400" />
                                 <span>Zero Telemetry</span>
                             </div>
                         </div>

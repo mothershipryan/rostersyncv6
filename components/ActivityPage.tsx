@@ -19,16 +19,16 @@ interface MetricCardProps {
 
 const MetricCard: React.FC<MetricCardProps> = ({ title, value, subValue, icon: Icon, gradient, iconBg, delay = '0ms' }) => (
     <div
-        className="glass-card rounded-2xl p-6 relative overflow-hidden group hover-lift"
+        className="glass-card rounded-2xl p-5 relative overflow-hidden group hover-lift"
     >
         {/* Background gradient decoration */}
         <div className={`absolute -right-10 -top-10 w-40 h-40 rounded-full ${gradient} blur-3xl opacity-20 group-hover:opacity-30 transition-opacity duration-500`}></div>
 
         {/* Icon with glow */}
-        <div className="relative z-10 flex justify-between items-start mb-6">
-            <div className={`relative p-3.5 rounded-2xl ${iconBg} border border-white/10 shadow-lg`}>
+        <div className="relative z-10 flex justify-between items-start mb-5">
+            <div className={`relative p-3 rounded-2xl ${iconBg} border border-white/10 shadow-lg`}>
                 <div className={`absolute inset-0 ${gradient} opacity-20 blur-xl rounded-2xl`}></div>
-                <Icon className="relative w-5 h-5 text-white" />
+                <Icon className="relative w-4.5 h-4.5 text-white" />
             </div>
             <div className="flex items-center gap-1.5 text-emerald-400">
                 <Icons.Activity className="w-3 h-3" />
@@ -38,12 +38,12 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, subValue, icon: I
 
         {/* Value */}
         <div className="relative z-10">
-            <p className="text-4xl font-display font-bold text-white tracking-tight">{value}</p>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mt-2">{title}</p>
+            <p className="text-3xl font-display font-bold text-white tracking-tight">{value}</p>
+            <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mt-1">{title}</p>
             {subValue && (
-                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/5">
+                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-white/5">
                     <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
-                    <p className="text-[11px] text-gray-500 font-medium">{subValue}</p>
+                    <p className="text-[10px] text-gray-500 font-medium">{subValue}</p>
                 </div>
             )}
         </div>
@@ -98,8 +98,8 @@ const ActivityPage: React.FC<ActivityPageProps> = ({ activityLogs }) => {
         <div className="space-y-8">
             {/* Header */}
             <header>
-                <h1 className="font-display text-4xl font-bold text-white tracking-tight">Activity Monitor</h1>
-                <p className="mt-2 text-gray-400 text-base">Track all system operations and performance metrics</p>
+                <h1 className="font-display text-3xl font-bold text-white tracking-tight">Activity Monitor</h1>
+                <p className="mt-1 text-gray-400 text-sm">Track all system operations and performance metrics</p>
             </header>
 
             {/* Metrics Grid */}
@@ -145,7 +145,7 @@ const ActivityPage: React.FC<ActivityPageProps> = ({ activityLogs }) => {
             {/* Activity Log Table */}
             <div className="glass-card rounded-2xl overflow-hidden">
                 {/* Table Header */}
-                <div className="h-14 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-5 gap-4">
+                <div className="h-12 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-5 gap-4">
                     <div className="flex space-x-2">
                         <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
                         <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
@@ -164,10 +164,10 @@ const ActivityPage: React.FC<ActivityPageProps> = ({ activityLogs }) => {
                     <table className="w-full text-sm text-left">
                         <thead className={`text-[10px] text-gray-500 uppercase font-semibold tracking-wider ${isScrollable ? 'sticky top-0 z-10 bg-slate-900/95 backdrop-blur-sm' : 'bg-slate-900/50'}`}>
                             <tr>
-                                <th scope="col" className="px-6 py-4">Timestamp</th>
-                                <th scope="col" className="px-6 py-4">Action</th>
-                                <th scope="col" className="px-6 py-4">Details</th>
-                                <th scope="col" className="px-6 py-4">Status</th>
+                                <th scope="col" className="px-6 py-3">Timestamp</th>
+                                <th scope="col" className="px-6 py-3">Action</th>
+                                <th scope="col" className="px-6 py-3">Details</th>
+                                <th scope="col" className="px-6 py-3">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -179,19 +179,19 @@ const ActivityPage: React.FC<ActivityPageProps> = ({ activityLogs }) => {
                                             key={log.id}
                                             className="border-b border-white/5 hover:bg-white/[0.03] transition-colors"
                                         >
-                                            <td className="px-6 py-4 font-mono text-xs text-gray-400">
+                                            <td className="px-6 py-3 font-mono text-[10px] text-gray-400">
                                                 {new Date(log.timestamp).toLocaleString()}
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-6 py-3">
                                                 <div className="flex items-center gap-2.5">
-                                                    <div className={`w-8 h-8 rounded-lg ${actionDisplay.bg} flex items-center justify-center`}>
-                                                        <actionDisplay.icon className={`w-4 h-4 ${actionDisplay.color} ${actionDisplay.style || ''}`} />
+                                                    <div className={`w-7 h-7 rounded-lg ${actionDisplay.bg} flex items-center justify-center`}>
+                                                        <actionDisplay.icon className={`w-3.5 h-3.5 ${actionDisplay.color} ${actionDisplay.style || ''}`} />
                                                     </div>
-                                                    <span className={`font-medium ${actionDisplay.color}`}>{actionDisplay.label}</span>
+                                                    <span className={`font-medium text-xs ${actionDisplay.color}`}>{actionDisplay.label}</span>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 text-gray-300 text-xs max-w-md truncate">{log.details}</td>
-                                            <td className="px-6 py-4">{getStatusBadge(log.status)}</td>
+                                            <td className="px-6 py-3 text-gray-300 text-[11px] max-w-md truncate">{log.details}</td>
+                                            <td className="px-6 py-3">{getStatusBadge(log.status)}</td>
                                         </tr>
                                     )
                                 })
