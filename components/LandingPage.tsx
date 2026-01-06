@@ -349,13 +349,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignUpClick }
                 {/* Hero Section */}
                 <div className="text-center animate-slide-up">
                     {/* Badge */}
-                    <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 mb-8">
-                        <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
-                        <span className="text-sm font-medium text-cyan-400">Powered by Gemini 1.5 Flash</span>
+                    <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 mb-6">
+                        <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></div>
+                        <span className="text-xs font-medium text-cyan-400">Powered by Gemini 1.5 Flash</span>
                     </div>
 
                     {/* Headline */}
-                    <h2 className="font-display text-5xl md:text-7xl font-extrabold max-w-5xl mx-auto leading-tight">
+                    <h2 className="font-display text-4xl md:text-6xl font-extrabold max-w-4xl mx-auto leading-tight">
                         <span className="gradient-text animate-gradient bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
                             Sync sports rosters
                         </span>
@@ -363,22 +363,22 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignUpClick }
                         <span className="text-white">to Iconik, instantly.</span>
                     </h2>
 
-                    <p className="max-w-2xl mx-auto mt-6 text-lg text-gray-400 leading-relaxed">
+                    <p className="max-w-2xl mx-auto mt-4 text-base text-gray-400 leading-relaxed">
                         Leverage Google's Gemini to extract, normalize, and format high-fidelity athlete data from the web, directly into your MAM. Eliminate manual data entry, ensure broadcast-level accuracy with multi-source verification, and sync production-ready metadata in seconds.
                     </p>
 
                     {/* Demo Card */}
-                    <div className="mt-14 w-full flex justify-center animate-slide-up" style={{ animationDelay: '200ms' }}>
+                    <div className="mt-10 w-full flex justify-center animate-slide-up" style={{ animationDelay: '200ms' }}>
                         <WorkflowDemo />
                     </div>
 
                     {/* CTA Buttons */}
-                    <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
-                        <button onClick={onSignUpClick} className="btn-primary text-base py-3 px-8 flex items-center justify-center gap-2">
+                    <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+                        <button onClick={onSignUpClick} className="btn-primary text-sm py-2.5 px-6 flex items-center justify-center gap-2">
                             Get Started Free
                             <Icons.ChevronRight className="w-4 h-4" />
                         </button>
-                        <button onClick={() => setIsDemoModalOpen(true)} className="btn-secondary text-base py-3 px-8 flex items-center justify-center gap-2">
+                        <button onClick={() => setIsDemoModalOpen(true)} className="btn-secondary text-sm py-2.5 px-6 flex items-center justify-center gap-2">
                             <Icons.Calendar className="w-4 h-4 text-gray-400" />
                             Book Demo
                         </button>
@@ -386,12 +386,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignUpClick }
                 </div>
 
                 {/* Pricing Section */}
-                <section className="mt-40 max-w-5xl mx-auto animate-slide-up" style={{ animationDelay: '400ms' }}>
-                    <div className="text-center mb-16">
-                        <h3 className="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+                <section className="mt-32 max-w-5xl mx-auto animate-slide-up" style={{ animationDelay: '400ms' }}>
+                    <div className="text-center mb-12">
+                        <h3 className="font-display text-3xl md:text-4xl font-bold text-white mb-3">
                             Simple, Transparent Pricing
                         </h3>
-                        <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                        <p className="text-gray-400 text-base max-w-2xl mx-auto">
                             Choose the plan that fits your workflow. Cancel anytime, no questions asked.
                         </p>
                     </div>
@@ -457,12 +457,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignUpClick }
                 </section>
 
                 {/* FAQ Section */}
-                <section className="mt-40 max-w-3xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h3 className="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+                <section className="mt-32 max-w-3xl mx-auto">
+                    <div className="text-center mb-12">
+                        <h3 className="font-display text-3xl md:text-4xl font-bold text-white mb-3">
                             Frequently Asked Questions
                         </h3>
-                        <p className="text-gray-400 text-lg">
+                        <p className="text-gray-400 text-base">
                             Everything you need to know about the product and workflow.
                         </p>
                     </div>
