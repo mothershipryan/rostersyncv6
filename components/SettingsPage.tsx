@@ -126,13 +126,13 @@ const SettingsPage: React.FC = () => {
     return (
         <div className="space-y-8 pb-10">
             {/* Header */}
-            <header className="animate-slide-up">
+            <header>
                 <h1 className="font-display text-4xl font-bold text-white tracking-tight">Settings</h1>
                 <p className="mt-2 text-gray-400 text-base">Configure your Iconik MAM integration</p>
             </header>
 
             {/* Main Settings Card */}
-            <div className="max-w-2xl glass-card rounded-3xl overflow-hidden animate-slide-up" style={{ animationDelay: '100ms' }}>
+            <div className="max-w-2xl glass-card rounded-3xl overflow-hidden">
                 {/* Card Header */}
                 <div className="h-14 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-5 gap-4">
                     <div className="flex space-x-2">
@@ -233,9 +233,9 @@ const SettingsPage: React.FC = () => {
 
                     {/* Status Message */}
                     {connectionStatus !== 'idle' && connectionStatus !== 'testing' && (
-                        <div className={`p-4 rounded-xl flex items-center gap-3 animate-scale-in ${connectionStatus === 'success'
-                                ? 'bg-emerald-500/10 border border-emerald-500/20'
-                                : 'bg-red-500/10 border border-red-500/20'
+                        <div className={`p-4 rounded-xl flex items-center gap-3 ${connectionStatus === 'success'
+                            ? 'bg-emerald-500/10 border border-emerald-500/20'
+                            : 'bg-red-500/10 border border-red-500/20'
                             }`}>
                             {connectionStatus === 'success' ? (
                                 <Icons.CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
@@ -251,7 +251,7 @@ const SettingsPage: React.FC = () => {
             </div>
 
             {/* Security Info Card */}
-            <div className="max-w-2xl glass-card rounded-2xl p-6 animate-slide-up border-emerald-500/10" style={{ animationDelay: '200ms' }}>
+            <div className="max-w-2xl glass-card rounded-2xl p-6 border-emerald-500/10">
                 <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
                         <div className="relative">

@@ -19,8 +19,7 @@ interface MetricCardProps {
 
 const MetricCard: React.FC<MetricCardProps> = ({ title, value, subValue, icon: Icon, gradient, iconBg, delay = '0ms' }) => (
     <div
-        className="glass-card rounded-2xl p-6 relative overflow-hidden group hover-lift animate-slide-up"
-        style={{ animationDelay: delay }}
+        className="glass-card rounded-2xl p-6 relative overflow-hidden group hover-lift"
     >
         {/* Background gradient decoration */}
         <div className={`absolute -right-10 -top-10 w-40 h-40 rounded-full ${gradient} blur-3xl opacity-20 group-hover:opacity-30 transition-opacity duration-500`}></div>
@@ -43,7 +42,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, subValue, icon: I
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mt-2">{title}</p>
             {subValue && (
                 <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
                     <p className="text-[11px] text-gray-500 font-medium">{subValue}</p>
                 </div>
             )}
@@ -98,7 +97,7 @@ const ActivityPage: React.FC<ActivityPageProps> = ({ activityLogs }) => {
     return (
         <div className="space-y-8">
             {/* Header */}
-            <header className="animate-slide-up">
+            <header>
                 <h1 className="font-display text-4xl font-bold text-white tracking-tight">Activity Monitor</h1>
                 <p className="mt-2 text-gray-400 text-base">Track all system operations and performance metrics</p>
             </header>
@@ -144,7 +143,7 @@ const ActivityPage: React.FC<ActivityPageProps> = ({ activityLogs }) => {
             </div>
 
             {/* Activity Log Table */}
-            <div className="glass-card rounded-2xl overflow-hidden animate-slide-up" style={{ animationDelay: '400ms' }}>
+            <div className="glass-card rounded-2xl overflow-hidden">
                 {/* Table Header */}
                 <div className="h-14 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-5 gap-4">
                     <div className="flex space-x-2">
@@ -179,7 +178,6 @@ const ActivityPage: React.FC<ActivityPageProps> = ({ activityLogs }) => {
                                         <tr
                                             key={log.id}
                                             className="border-b border-white/5 hover:bg-white/[0.03] transition-colors"
-                                            style={{ animationDelay: `${index * 50}ms` }}
                                         >
                                             <td className="px-6 py-4 font-mono text-xs text-gray-400">
                                                 {new Date(log.timestamp).toLocaleString()}
