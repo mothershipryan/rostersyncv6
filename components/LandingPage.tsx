@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Icons } from './icons';
 import DemoRequestModal from './DemoRequestModal';
 import SupportModal from './SupportModal';
+import WorkflowDemo from './WorkflowDemo';
 
 interface LandingPageProps {
     onLoginClick: () => void;
@@ -368,9 +369,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignUpClick }
 
                     {/* Demo Card */}
                     <div className="mt-14 w-full flex justify-center animate-slide-up" style={{ animationDelay: '200ms' }}>
-                        <div className="w-full max-w-xl">
-                            <AnimatedFlowCard />
-                        </div>
+                        <WorkflowDemo />
                     </div>
 
                     {/* CTA Buttons */}
