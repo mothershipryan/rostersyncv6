@@ -21,7 +21,8 @@ type WorkflowStep =
     | 'saving'
     | 'saved-confirmation'
     | 'syncing'
-    | 'success';
+    | 'success'
+    | 'iconik-view';
 
 const WorkflowDemo: React.FC = () => {
     const [step, setStep] = useState<WorkflowStep>('idle');
@@ -62,11 +63,14 @@ const WorkflowDemo: React.FC = () => {
                 timeout = setTimeout(() => setStep('success'), 2500);
                 break;
             case 'success':
+                timeout = setTimeout(() => setStep('iconik-view'), 3000);
+                break;
+            case 'iconik-view':
                 timeout = setTimeout(() => {
                     setTypedText('');
                     setVisiblePlayers(0);
                     setStep('idle');
-                }, 4000);
+                }, 5000);
                 break;
         }
 
@@ -266,17 +270,99 @@ const WorkflowDemo: React.FC = () => {
                             </div>
                         </div>
                     )}
+
+                    {/* Iconik Interface View */}
+                    {step === 'iconik-view' && (
+                        <div className="absolute inset-0 bg-[#282c34] animate-fade-in overflow-hidden">
+                            {/* Iconik Green Header */}
+                            <div className="h-12 bg-[#45a049] flex items-center px-4 justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-7 h-7 rounded bg-white/20 flex items-center justify-center">
+                                        <Icons.ChevronDown className="w-4 h-4 text-white" />
+                                    </div>
+                                    <span className="font-semibold text-white text-sm">liverpool-fc</span>
+                                </div>
+                                <Icons.Close className="w-5 h-5 text-white/90 hover:text-white cursor-pointer" />
+                            </div>
+
+                            {/* Iconik Form Content */}
+                            <div className="p-6 space-y-4 overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(100% - 48px)' }}>
+                                {/* Label Field */}
+                                <div className="flex items-center gap-4">
+                                    <label className="w-24 text-xs text-gray-400 text-right flex-shrink-0">Label<span className="text-red-400 ml-0.5">*</span></label>
+                                    <div className="flex-1 bg-[#1e2329] text-white text-sm px-4 py-2.5 rounded border border-white/20 font-medium">
+                                        Liverpool FC
+                                    </div>
+                                </div>
+
+                                {/* Multiselect Toggle */}
+                                <div className="flex items-center gap-4">
+                                    <label className="w-24 text-xs text-gray-400 text-right flex-shrink-0">Multiselect</label>
+                                    <div className="w-11 h-6 bg-[#45a049] rounded-full relative cursor-pointer">
+                                        <div className="absolute right-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-lg"></div>
+                                    </div>
+                                </div>
+
+                                {/* Options Field */}
+                                <div className="flex items-start gap-4">
+                                    <label className="w-24 text-xs text-gray-400 text-right flex-shrink-0 mt-2">Options</label>
+                                    <div className="flex-1 space-y-1">
+                                        {/* Player options - two columns */}
+                                        <div className="space-y-0.5">
+                                            {LIVERPOOL_PLAYERS.map((player, i) => (
+                                                <div key={i} className="grid grid-cols-2 gap-x-3 animate-slide-up" style={{ animationDelay: `${i * 60}ms` }}>
+                                                    {/* Left column - with drag handle */}
+                                                    <div className="flex items-center gap-2 py-2 border-b border-white/10">
+                                                        <Icons.Menu className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
+                                                        <span className="text-xs text-gray-200 truncate">{player.name}</span>
+                                                    </div>
+                                                    {/* Right column - with delete */}
+                                                    <div className="flex items-center justify-between py-2 border-b border-white/10">
+                                                        <span className="text-xs text-gray-200 truncate">{player.name}</span>
+                                                        <Icons.Close className="w-3.5 h-3.5 text-red-400 flex-shrink-0 cursor-pointer hover:text-red-300" />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Action buttons */}
+                                        <div className="flex items-center justify-between pt-2">
+                                            <div className="flex items-center gap-2">
+                                                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-white/30 text-gray-300 text-xs font-semibold hover:bg-white/5 transition-colors">
+                                                    <Icons.New className="w-3.5 h-3.5" />
+                                                    ADD
+                                                </button>
+                                                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-white/30 text-gray-300 text-xs font-semibold hover:bg-white/5 transition-colors">
+                                                    <Icons.Sort className="w-3.5 h-3.5" />
+                                                    ABC
+                                                </button>
+                                            </div>
+                                            <span className="text-xs text-gray-500 hover:text-gray-300 cursor-pointer font-medium">SHOW ALL</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Description Field */}
+                                <div className="flex items-center gap-4">
+                                    <label className="w-24 text-xs text-gray-400 text-right flex-shrink-0">Description</label>
+                                    <div className="flex-1 bg-[#1e2329] text-gray-400 text-xs px-4 py-2.5 rounded border border-white/20">
+                                        Imported via RosterSync from web search
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
             {/* Progress Indicator */}
             <div className="mt-4 flex justify-center gap-2">
-                {['idle', 'typing', 'searching', 'results', 'viewing-players', 'saving', 'saved-confirmation', 'syncing', 'success'].map((s, i) => (
+                {['idle', 'typing', 'searching', 'results', 'viewing-players', 'saving', 'saved-confirmation', 'syncing', 'success', 'iconik-view'].map((s, i) => (
                     <div
                         key={s}
-                        className={`h-1.5 rounded-full transition-all duration-300 ${['idle', 'typing', 'searching', 'results', 'viewing-players', 'saving', 'saved-confirmation', 'syncing', 'success'].indexOf(step) >= i
-                                ? 'w-8 bg-indigo-500'
-                                : 'w-1.5 bg-gray-700'
+                        className={`h-1.5 rounded-full transition-all duration-300 ${['idle', 'typing', 'searching', 'results', 'viewing-players', 'saving', 'saved-confirmation', 'syncing', 'success', 'iconik-view'].indexOf(step) >= i
+                            ? 'w-8 bg-indigo-500'
+                            : 'w-1.5 bg-gray-700'
                             }`}
                     />
                 ))}
