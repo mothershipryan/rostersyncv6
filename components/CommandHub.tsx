@@ -5,9 +5,10 @@ import { Icons } from './icons';
 interface CommandHubProps {
     onExtract: (query: string) => void;
     isLoading: boolean;
+    onOpenImport?: () => void;
 }
 
-const CommandHub: React.FC<CommandHubProps> = ({ onExtract, isLoading }) => {
+const CommandHub: React.FC<CommandHubProps> = ({ onExtract, isLoading, onOpenImport }) => {
     const [query, setQuery] = useState('');
     const [isFocused, setIsFocused] = useState(false);
 
@@ -36,6 +37,16 @@ const CommandHub: React.FC<CommandHubProps> = ({ onExtract, isLoading }) => {
                         <span className="text-xs font-semibold text-gray-300 tracking-wide">Extraction Hub</span>
                         <span className="badge badge-primary text-[9px] py-0.5">AI-Powered</span>
                     </div>
+
+                    {onOpenImport && (
+                        <button
+                            onClick={onOpenImport}
+                            className="ml-auto flex items-center gap-2 text-[10px] font-semibold text-indigo-400 hover:text-indigo-300 transition-colors bg-indigo-500/10 hover:bg-indigo-500/20 px-3 py-1.5 rounded-lg border border-indigo-500/20"
+                        >
+                            <Icons.Cloud className="w-3 h-3" />
+                            Import from Iconik
+                        </button>
+                    )}
                 </div>
 
                 {/* Card Body */}
