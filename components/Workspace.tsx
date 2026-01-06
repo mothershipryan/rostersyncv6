@@ -181,25 +181,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
                                     "{roster.verificationNotes || 'No notes available.'}"
                                 </p>
                             </div>
-
-                            <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-
-                            <div>
-                                <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-3">Grounding Sources</p>
-                                <ul className="space-y-2">
-                                    {roster.verifiedSources?.map((url, i) => (
-                                        <li key={i} className="flex items-center gap-3 bg-slate-900/50 p-2.5 rounded-xl border border-white/5 hover:border-cyan-500/30 transition-colors group">
-                                            <Icons.Globe className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                                            <a href={url} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-white transition-colors text-xs truncate font-medium">
-                                                {getHostname(url)}
-                                            </a>
-                                        </li>
-                                    ))}
-                                    {(!roster.verifiedSources || roster.verifiedSources.length === 0) && (
-                                        <li className="text-xs text-gray-500 italic p-3">No sources cited.</li>
-                                    )}
-                                </ul>
-                            </div>
                         </div>
                     </div>
 

@@ -162,43 +162,9 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
                 result.verificationNotes = "Extraction completed successfully.";
             }
 
-            // 4. Extract Grounding Metadata (Real URLs from Google Search)
-            // Check multiple possible paths for grounding metadata
-            let groundingSources: string[] = [];
 
-            // Try to get grounding chunks from various possible locations
-            const groundingChunks =
-                response.candidates?.[0]?.groundingMetadata?.groundingChunks ||
-                response.candidates?.[0]?.grounding_metadata?.grounding_chunks ||
-                response.groundingMetadata?.groundingChunks ||
-                [];
 
-            console.log('[RosterSync] Grounding chunks found:', groundingChunks);
-
-            if (Array.isArray(groundingChunks) && groundingChunks.length > 0) {
-                groundingSources = groundingChunks
-                    .map((chunk: any) => {
-                        // Try multiple possible paths for the URI
-                        return chunk.web?.uri || chunk.web?.url || chunk.uri || chunk.url;
-                    })
-                    .filter((uri: string) => uri && typeof uri === 'string');
-
-                console.log('[RosterSync] Extracted grounding sources:', groundingSources);
-            } else {
-                console.warn('[RosterSync] No grounding chunks found in response');
-            }
-
-            // Merge explicit grounding sources
-            if (groundingSources.length > 0) {
-                // Add new valid sources and deduplicate
-                const allSources = [...(result.verifiedSources || []), ...groundingSources];
-                result.verifiedSources = [...new Set(allSources)];
-                console.log('[RosterSync] Final verified sources count:', result.verifiedSources.length);
-            } else {
-                console.log('[RosterSync] Note: Google Search grounding sources not available in this response. The AI may have used its training data instead. Sources in result.verifiedSources:', result.verifiedSources?.length || 0);
-            }
-
-            // 5. Sort Players Safely
+            // 4. Sort Players Safely
             result.players.sort((a: any, b: any) => {
                 const nameA = (a.name || '').toString();
                 const nameB = (b.name || '').toString();
@@ -207,7 +173,7 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
                 return lastNameA.localeCompare(lastNameB);
             });
 
-            // 6. Append Performance Metadata
+            // 5. Append Performance Metadata
             result.meta = {
                 model: model,
                 latencyMs: endTime - startTime,
