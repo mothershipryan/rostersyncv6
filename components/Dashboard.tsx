@@ -142,15 +142,15 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
                         </div>
 
                         {/* Title */}
-                        <h2 className="font-display text-2xl font-bold text-white mb-2">
+                        <h2 className="font-display text-xl font-bold text-white mb-1.5">
                             RosterSync Engine Ready
                         </h2>
-                        <p className="text-gray-400 max-w-sm mx-auto text-sm">
+                        <p className="text-gray-400 max-w-sm mx-auto text-xs leading-snug">
                             Enter any team name above to begin extracting player rosters using our AI-powered multi-source verification system.
                         </p>
 
                         {/* Search Tips */}
-                        <div className="mt-10 max-w-xl mx-auto p-4 rounded-2xl bg-white/5 border border-white/10 text-left" style={{ animationDelay: '200ms' }}>
+                        <div className="mt-6 max-w-xl mx-auto p-4 rounded-2xl bg-white/5 border border-white/10 text-left" style={{ animationDelay: '200ms' }}>
                             <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
                                 <Icons.Search className="w-3.5 h-3.5 text-indigo-400" />
                                 Search Tips:
