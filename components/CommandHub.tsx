@@ -20,8 +20,8 @@ const CommandHub: React.FC<CommandHubProps> = ({ onExtract, isLoading, onOpenImp
     };
 
     return (
-        <div className="animate-slide-up stagger-1">
-            <div className="glass-card rounded-3xl overflow-hidden hover-lift">
+        <div>
+            <div className="glass-card rounded-3xl overflow-hidden">
                 {/* Card Header */}
                 <div className="h-14 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-5 gap-4">
                     <div className="flex space-x-2">
@@ -52,9 +52,6 @@ const CommandHub: React.FC<CommandHubProps> = ({ onExtract, isLoading, onOpenImp
                 <div className="p-6 md:p-8">
                     <form onSubmit={handleSubmit}>
                         <div className="relative">
-                            {/* Animated glow effect */}
-                            <div className={`absolute -inset-1 bg-gradient-to-r from-indigo-500/50 via-purple-500/50 to-cyan-500/50 rounded-2xl blur-lg transition-all duration-500 ${isFocused ? 'opacity-40' : 'opacity-0'}`}></div>
-
                             <div className="relative">
                                 {/* Search icon with pulse */}
                                 <div className="absolute left-5 top-1/2 -translate-y-1/2">
@@ -76,7 +73,7 @@ const CommandHub: React.FC<CommandHubProps> = ({ onExtract, isLoading, onOpenImp
                                 <button
                                     type="submit"
                                     disabled={isLoading || !query.trim()}
-                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-100 transition-all duration-300 disabled:from-gray-700 disabled:to-gray-700 disabled:text-gray-500 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed flex items-center gap-2"
+                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-indigo-500/25 flex items-center gap-2 disabled:from-gray-700 disabled:to-gray-700 disabled:text-gray-500 disabled:shadow-none disabled:cursor-not-allowed"
                                 >
                                     {isLoading ? (
                                         <>
