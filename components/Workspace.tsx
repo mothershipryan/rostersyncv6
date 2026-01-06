@@ -33,7 +33,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
     return (
         <div className="space-y-8 animate-slide-up">
             {/* Header Card */}
-            <header className="glass-card rounded-3xl p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative overflow-hidden">
+            <header className="glass-card rounded-2xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative overflow-hidden">
                 {/* Gradient accent */}
                 <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-500 to-emerald-500 rounded-l-3xl"></div>
                 <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-cyan-500/10 to-emerald-500/10 blur-3xl -z-10"></div>
@@ -47,7 +47,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
                             </span>
                         )}
                     </div>
-                    <h2 className="font-display text-3xl font-extrabold text-white tracking-tight">
+                    <h2 className="font-display text-2xl font-extrabold text-white tracking-tight">
                         {roster.teamName || 'Unknown Team'}
                     </h2>
                     <p className="text-gray-400 font-medium mt-1">
@@ -68,8 +68,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
                 {/* Main Content Area */}
                 <div className="lg:col-span-2 space-y-6">
                     {/* Player List Card */}
-                    <div className="glass-card rounded-3xl overflow-hidden">
-                        <div className="h-14 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center justify-between px-5">
+                    <div className="glass-card rounded-2xl overflow-hidden">
+                        <div className="h-12 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center justify-between px-5">
                             <div className="flex items-center gap-4">
                                 <div className="flex space-x-2">
                                     <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
@@ -90,7 +90,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
                                 {roster.players?.map((player, i) => (
                                     <li
                                         key={i}
-                                        className="text-sm p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all flex items-center gap-4 group"
+                                        className="text-sm p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all flex items-center gap-4 group"
                                     >
                                         <span className="text-xs font-mono font-bold text-cyan-500/50 w-6 text-right">{i + 1}</span>
                                         <span className="font-semibold text-gray-200 group-hover:text-white flex-1">{player.name}</span>
@@ -104,8 +104,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
                     </div>
 
                     {/* JSON Payload Card */}
-                    <div className="glass-card rounded-3xl overflow-hidden">
-                        <div className="h-14 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center justify-between px-5">
+                    <div className="glass-card rounded-2xl overflow-hidden">
+                        <div className="h-12 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center justify-between px-5">
                             <div className="flex items-center gap-4">
                                 <div className="flex space-x-2">
                                     <div className="w-3 h-3 rounded-full bg-slate-600"></div>
@@ -121,8 +121,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
                             <button
                                 onClick={handleCopy}
                                 className={`flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${copied
-                                        ? 'bg-emerald-500 text-white'
-                                        : 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500 hover:text-white'
+                                    ? 'bg-emerald-500 text-white'
+                                    : 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500 hover:text-white'
                                     }`}
                             >
                                 {copied ? <Icons.Check className="w-3 h-3" /> : <Icons.Copy className="w-3 h-3" />}
@@ -131,7 +131,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
                         </div>
 
                         <div className="overflow-auto max-h-[400px] custom-scrollbar bg-[#0d1117]">
-                            <pre className="p-6 font-mono text-[11px] leading-relaxed">
+                            <pre className="p-4 font-mono text-[10px] leading-relaxed">
                                 <code className="text-emerald-400">
                                     {JSON.stringify(iconikPayload, null, 2)}
                                 </code>
@@ -143,8 +143,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
                 {/* Metadata Sidebar */}
                 <div className="lg:col-span-1 space-y-6">
                     {/* AI Analysis Card */}
-                    <div className="glass-card rounded-3xl overflow-hidden">
-                        <div className="h-14 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-5 gap-4">
+                    <div className="glass-card rounded-2xl overflow-hidden">
+                        <div className="h-12 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-5 gap-4">
                             <div className="flex space-x-2">
                                 <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
                                 <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
@@ -160,13 +160,13 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
                         <div className="p-6 space-y-6">
                             {roster.meta && (
                                 <div className="grid grid-cols-2 gap-3 pb-6 border-b border-white/5">
-                                    <div className="glass-subtle rounded-xl p-4">
+                                    <div className="glass-subtle rounded-xl p-3">
                                         <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Total Tokens</p>
-                                        <p className="text-2xl font-mono text-emerald-400 font-bold">{roster.meta.totalTokens?.toLocaleString() || 0}</p>
+                                        <p className="text-xl font-mono text-emerald-400 font-bold">{roster.meta.totalTokens?.toLocaleString() || 0}</p>
                                     </div>
-                                    <div className="glass-subtle rounded-xl p-4">
+                                    <div className="glass-subtle rounded-xl p-3">
                                         <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Latency</p>
-                                        <p className="text-2xl font-mono text-blue-400 font-bold">{(roster.meta.latencyMs / 1000).toFixed(2)}s</p>
+                                        <p className="text-xl font-mono text-blue-400 font-bold">{(roster.meta.latencyMs / 1000).toFixed(2)}s</p>
                                     </div>
                                     <div className="col-span-2 flex justify-between text-[10px] text-gray-500 font-mono px-1">
                                         <span>Prompt: {roster.meta.promptTokens || 0}</span>
@@ -177,7 +177,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
 
                             <div>
                                 <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-3">AI Logic Context</p>
-                                <p className="text-sm bg-slate-900/80 p-4 rounded-xl border border-white/5 italic text-gray-300 leading-relaxed">
+                                <p className="text-sm bg-slate-900/80 p-3 rounded-xl border border-white/5 italic text-gray-300 leading-relaxed">
                                     "{roster.verificationNotes || 'No notes available.'}"
                                 </p>
                             </div>
@@ -188,8 +188,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
                                 <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-3">Grounding Sources</p>
                                 <ul className="space-y-2">
                                     {roster.verifiedSources?.map((url, i) => (
-                                        <li key={i} className="flex items-center gap-3 bg-slate-900/50 p-3 rounded-xl border border-white/5 hover:border-cyan-500/30 transition-colors group">
-                                            <Icons.Globe className="w-4 h-4 text-cyan-400 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                                        <li key={i} className="flex items-center gap-3 bg-slate-900/50 p-2.5 rounded-xl border border-white/5 hover:border-cyan-500/30 transition-colors group">
+                                            <Icons.Globe className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0 group-hover:scale-110 transition-transform" />
                                             <a href={url} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-white transition-colors text-xs truncate font-medium">
                                                 {getHostname(url)}
                                             </a>

@@ -35,17 +35,17 @@ const App: React.FC = () => {
     const loadInitialData = async (userId: string) => {
         const rostersPromise = supabase.getSavedRosters(userId);
         const logsPromise = supabase.getActivityLogs(userId);
-    
+
         const [rostersResult, logsResult] = await Promise.all([rostersPromise, logsPromise]);
-    
+
         if (rostersResult.error === 'missing_table' || logsResult.error === 'missing_table') {
             setIsDbSetupOpen(true);
         }
-        
+
         setSavedRosters(rostersResult.data);
         setActivityLogs(logsResult.data);
     };
-    
+
     useEffect(() => {
         const loadInitialSession = async () => {
             const currentSession = await supabase.getSession();
@@ -56,7 +56,7 @@ const App: React.FC = () => {
         };
         loadInitialSession();
     }, []);
-    
+
     const handleAddActivityLog = useCallback(async (log: Omit<ActivityLog, 'id' | 'timestamp' | 'user_id'>) => {
         if (!session) return;
         const newLog = await supabase.addActivityLog(session.user.id, log);
@@ -70,7 +70,7 @@ const App: React.FC = () => {
         setSession(currentSession);
         if (currentSession) {
             await loadInitialData(currentSession.user.id);
-            
+
             const newLog = await supabase.addActivityLog(currentSession.user.id, {
                 action: 'Login',
                 details: `User sign-in: ${currentSession.user.email}`,
@@ -99,7 +99,7 @@ const App: React.FC = () => {
         setActiveRosterId(null);
         setCurrentPage(Page.DASHBOARD);
     };
-    
+
     const handleNewExtraction = () => {
         setActiveRoster(null);
         setActiveRosterId(null);
@@ -119,9 +119,9 @@ const App: React.FC = () => {
             setIsConflictModalOpen(true);
         } else {
             const newRoster = await supabase.saveRoster(session.user.id, rosterData.teamName, rosterData.sport, rosterData);
-            if(newRoster) {
+            if (newRoster) {
                 setSavedRosters(prev => [newRoster, ...prev].sort((a, b) => a.team_name.localeCompare(b.team_name)));
-                
+
                 await handleAddActivityLog({
                     action: 'Extraction',
                     details: `Saved: ${newRoster.team_name} - ${newRoster.player_names.length} players`,
@@ -133,7 +133,7 @@ const App: React.FC = () => {
             }
         }
     };
-    
+
     const initiateDeleteRoster = (roster: SavedRoster) => {
         setRosterToDelete(roster);
         setIsDeleteModalOpen(true);
@@ -165,10 +165,10 @@ const App: React.FC = () => {
             setSavedRosters(prev => prev.map(r => r.id === rosterId ? updatedRoster : r).sort((a, b) => a.team_name.localeCompare(b.team_name)));
         }
     };
-    
+
     const handleSelectRoster = (roster: SavedRoster) => {
         setActiveRosterId(roster.id);
-        setActiveRoster(null); 
+        setActiveRoster(null);
         setCurrentPage(Page.DASHBOARD);
     };
 
@@ -179,7 +179,7 @@ const App: React.FC = () => {
             setSavedRosters(prev => prev.map(r => r.id === rosterId ? updatedRoster : r).sort((a, b) => a.team_name.localeCompare(b.team_name)));
         }
     };
-    
+
     const handleOpenLogin = () => {
         setAuthModalView('login');
         setAuthModalOpen(true);
@@ -212,7 +212,7 @@ const App: React.FC = () => {
             verifiedSources: combinedSources,
             verificationNotes: updatedNote,
         };
-        
+
         await handleUpdateRoster(conflictingRoster.id, mergedData);
 
         await handleAddActivityLog({
@@ -231,7 +231,7 @@ const App: React.FC = () => {
 
     const handleConfirmSaveAsNew = async () => {
         if (!rosterToSave || !session) return;
-        
+
         let newName = rosterToSave.teamName;
         let counter = 1;
         while (savedRosters.some(r => r.team_name.trim().toLowerCase() === newName.trim().toLowerCase())) {
@@ -242,19 +242,19 @@ const App: React.FC = () => {
         const newRosterData = { ...rosterToSave, teamName: newName };
 
         const newRoster = await supabase.saveRoster(session.user.id, newRosterData.teamName, newRosterData.sport, newRosterData);
-        if(newRoster) {
+        if (newRoster) {
             setSavedRosters(prev => [newRoster, ...prev].sort((a, b) => a.team_name.localeCompare(b.team_name)));
-            
+
             await handleAddActivityLog({
                 action: 'Extraction',
                 details: `Saved new version: ${newRoster.team_name}`,
                 status: 'OK'
             });
-            
+
             setActiveRosterId(newRoster.id);
             setActiveRoster(null);
         }
-        
+
         setIsConflictModalOpen(false);
         setRosterToSave(null);
         setConflictingRoster(null);
@@ -268,17 +268,17 @@ const App: React.FC = () => {
             </>
         );
     }
-    
+
     const renderPage = () => {
         const selectedRoster = savedRosters.find(r => r.id === activeRosterId);
         if (selectedRoster) {
-            return <RosterPage 
-                roster={selectedRoster} 
-                onUpdate={handleUpdateRoster} 
+            return <RosterPage
+                roster={selectedRoster}
+                onUpdate={handleUpdateRoster}
                 onAddActivityLog={handleAddActivityLog}
             />;
         }
-        
+
         switch (currentPage) {
             case Page.DASHBOARD:
                 return <Dashboard activeRoster={activeRoster} onSaveRoster={handleSaveRoster} onNewExtractionResult={setActiveRoster} />;
@@ -287,7 +287,7 @@ const App: React.FC = () => {
             case Page.SETTINGS:
                 return <SettingsPage />;
             default:
-                return <Dashboard activeRoster={activeRoster} onSaveRoster={handleSaveRoster} onNewExtractionResult={setActiveRoster}/>;
+                return <Dashboard activeRoster={activeRoster} onSaveRoster={handleSaveRoster} onNewExtractionResult={setActiveRoster} />;
         }
     };
 
@@ -297,21 +297,21 @@ const App: React.FC = () => {
             <div className="fixed inset-0 -z-10 overflow-hidden">
                 {/* Base gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-                
+
                 {/* Animated orbs */}
                 <div className="orb orb-indigo w-[600px] h-[600px] -top-[200px] -left-[100px] animate-float"></div>
                 <div className="orb orb-purple w-[500px] h-[500px] top-[30%] right-[-150px] animate-float" style={{ animationDelay: '-2s' }}></div>
                 <div className="orb orb-cyan w-[400px] h-[400px] bottom-[-100px] left-[30%] animate-float" style={{ animationDelay: '-4s' }}></div>
-                
+
                 {/* Grid pattern overlay */}
                 <div className="absolute inset-0 bg-grid opacity-30"></div>
-                
+
                 {/* Noise texture */}
                 <div className="absolute inset-0 opacity-[0.02]" style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
                 }}></div>
             </div>
-            
+
             <Sidebar
                 user={session.user}
                 currentPage={currentPage}
@@ -326,15 +326,15 @@ const App: React.FC = () => {
                 isCollapsed={isSidebarCollapsed}
                 onToggleCollapse={() => setIsSidebarCollapsed(prev => !prev)}
             />
-            
+
             <main className={`flex-1 pl-20 ${isSidebarCollapsed ? 'md:pl-20' : 'md:pl-72'} transition-all duration-500 ease-out`}>
-                <div className="p-6 sm:p-8 lg:p-10 max-w-7xl mx-auto">
+                <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
                     {renderPage()}
                 </div>
             </main>
-            
+
             {isDbSetupOpen && <DatabaseSetupModal onClose={() => setIsDbSetupOpen(false)} />}
-            
+
             <ConfirmationModal
                 isOpen={isDeleteModalOpen && rosterToDelete !== null}
                 onClose={() => {

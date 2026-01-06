@@ -75,10 +75,10 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
             <header className="relative">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                        <h1 className="font-display text-4xl font-bold text-white tracking-tight">
+                        <h1 className="font-display text-3xl font-bold text-white tracking-tight">
                             Dashboard
                         </h1>
-                        <p className="mt-2 text-gray-400 text-base">
+                        <p className="mt-1 text-gray-400 text-sm">
                             Extract and manage sports rosters with AI-powered precision
                         </p>
                     </div>
@@ -124,35 +124,35 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
 
             {/* Empty State */}
             {!activeRoster && !isLoading && !error && (
-                <div className="relative py-20 animate-slide-up">
+                <div className="relative py-12">
                     {/* Background decoration */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-[400px] h-[400px] rounded-full bg-gradient-to-br from-indigo-500/5 to-purple-500/5 blur-3xl"></div>
+                        <div className="w-[300px] h-[300px] rounded-full bg-gradient-to-br from-indigo-500/5 to-purple-500/5 blur-3xl"></div>
                     </div>
 
                     <div className="relative text-center">
                         {/* Icon */}
-                        <div className="relative inline-flex mb-8">
-                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-500 blur-2xl opacity-30 animate-pulse"></div>
-                            <div className="relative w-24 h-24 rounded-3xl bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 flex items-center justify-center shadow-2xl">
-                                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/20">
-                                    <Icons.Search className="w-8 h-8 text-indigo-400" />
+                        <div className="relative inline-flex mb-6">
+                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-500 blur-2xl opacity-30"></div>
+                            <div className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 flex items-center justify-center shadow-2xl">
+                                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/20">
+                                    <Icons.Search className="w-7 h-7 text-indigo-400" />
                                 </div>
                             </div>
                         </div>
 
                         {/* Title */}
-                        <h2 className="font-display text-3xl font-bold text-white mb-3">
+                        <h2 className="font-display text-2xl font-bold text-white mb-2">
                             RosterSync Engine Ready
                         </h2>
-                        <p className="text-gray-400 max-w-md mx-auto text-base">
+                        <p className="text-gray-400 max-w-sm mx-auto text-sm">
                             Enter any team name above to begin extracting player rosters using our AI-powered multi-source verification system.
                         </p>
 
                         {/* Search Tips */}
-                        <div className="mt-12 max-w-2xl mx-auto p-8 rounded-2xl bg-white/5 border border-white/10 text-left animate-slide-up" style={{ animationDelay: '200ms' }}>
-                            <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                                <Icons.Search className="w-5 h-5 text-indigo-400" />
+                        <div className="mt-10 max-w-xl mx-auto p-6 rounded-2xl bg-white/5 border border-white/10 text-left" style={{ animationDelay: '200ms' }}>
+                            <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
+                                <Icons.Search className="w-4 h-4 text-indigo-400" />
                                 Search Tips:
                             </h3>
                             <ul className="space-y-4">

@@ -23,7 +23,7 @@ const CommandHub: React.FC<CommandHubProps> = ({ onExtract, isLoading, onOpenImp
         <div>
             <div className="glass-card rounded-3xl overflow-hidden">
                 {/* Card Header */}
-                <div className="h-14 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-5 gap-4">
+                <div className="h-12 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-5 gap-4">
                     <div className="flex space-x-2">
                         <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors cursor-pointer"></div>
                         <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 transition-colors cursor-pointer"></div>
@@ -49,13 +49,13 @@ const CommandHub: React.FC<CommandHubProps> = ({ onExtract, isLoading, onOpenImp
                 </div>
 
                 {/* Card Body */}
-                <div className="p-6 md:p-8">
+                <div className="p-4 md:p-6">
                     <form onSubmit={handleSubmit}>
                         <div className="relative">
                             <div className="relative">
-                                {/* Search icon with pulse */}
-                                <div className="absolute left-5 top-1/2 -translate-y-1/2">
-                                    <Icons.Search className={`w-5 h-5 transition-colors duration-300 ${isFocused ? 'text-indigo-400' : 'text-gray-500'}`} />
+                                {/* Search icon */}
+                                <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                                    <Icons.Search className={`w-4 h-4 transition-colors duration-300 ${isFocused ? 'text-indigo-400' : 'text-gray-500'}`} />
                                 </div>
 
                                 <input
@@ -67,13 +67,13 @@ const CommandHub: React.FC<CommandHubProps> = ({ onExtract, isLoading, onOpenImp
                                     placeholder="Enter team name to extract roster..."
                                     disabled={isLoading}
                                     autoFocus
-                                    className="w-full bg-slate-900/80 border border-white/10 rounded-2xl pl-14 pr-40 py-5 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40 transition-all duration-300 placeholder-gray-500 text-white text-base font-medium"
+                                    className="w-full bg-slate-900/80 border border-white/10 rounded-xl pl-12 pr-36 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40 transition-all duration-300 placeholder-gray-500 text-white text-sm font-medium"
                                 />
 
                                 <button
                                     type="submit"
                                     disabled={isLoading || !query.trim()}
-                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-indigo-500/25 flex items-center gap-2 disabled:from-gray-700 disabled:to-gray-700 disabled:text-gray-500 disabled:shadow-none disabled:cursor-not-allowed"
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-4 py-2 rounded-lg text-xs font-semibold shadow-lg shadow-indigo-500/25 flex items-center gap-2 disabled:from-gray-700 disabled:to-gray-700 disabled:text-gray-500 disabled:shadow-none disabled:cursor-not-allowed"
                                 >
                                     {isLoading ? (
                                         <>
