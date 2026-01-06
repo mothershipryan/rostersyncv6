@@ -150,21 +150,20 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
                         </p>
 
                         {/* Search Tips */}
-                        <div className="mt-12 max-w-lg mx-auto p-8 rounded-2xl bg-white/5 border border-white/10 text-left animate-slide-up" style={{ animationDelay: '200ms' }}>
-                            <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                                Search Tips:
-                            </h3>
-                            <ul className="space-y-4">
-                                <li className="text-gray-300 text-sm leading-relaxed">
-                                    1. <strong>Be Specific</strong>: "Lakers 2024" uses fewer search results than "basketball team california"
-                                </li>
-                                <li className="text-gray-300 text-sm leading-relaxed">
-                                    2. <strong>Use Official Names</strong>: "Manchester United" is better than "Man U red devils"
-                                </li>
-                                <li className="text-gray-300 text-sm leading-relaxed">
-                                    3. <strong>Specify Gender/Level</strong>: "Duke Women's Soccer" avoids ambiguity and extra searches
-                                </li>
-                            </ul>
+                        <div className="mt-12 max-w-2xl mx-auto p-6 rounded-2xl bg-white/5 border border-white/10 animate-slide-up" style={{ animationDelay: '200ms' }}>
+                            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                                <div className="text-gray-300 text-sm">
+                                    <span className="font-bold text-indigo-400 mr-2">1. Be Specific:</span> "Lakers 2024"
+                                </div>
+                                <div className="hidden md:block w-px h-4 bg-white/10"></div>
+                                <div className="text-gray-300 text-sm">
+                                    <span className="font-bold text-indigo-400 mr-2">2. Use Official Names:</span> "Manchester United"
+                                </div>
+                                <div className="hidden md:block w-px h-4 bg-white/10"></div>
+                                <div className="text-gray-300 text-sm">
+                                    <span className="font-bold text-indigo-400 mr-2">3. Gender/Level:</span> "Duke Women's Soccer"
+                                </div>
+                            </div>
                         </div>
 
                         <div className="mt-8 flex justify-center animate-slide-up" style={{ animationDelay: '300ms' }}>
