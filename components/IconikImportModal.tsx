@@ -1,7 +1,7 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Icons } from './icons';
-import { searchIconikFields, getIconikField } from '../services/iconikService';
+import { getIconikField } from '../services/iconikService';
 import { decryptToken } from '../services/cryptoService';
 import { Player } from '../types';
 
@@ -14,7 +14,6 @@ const IconikImportModal: React.FC<IconikImportModalProps> = ({ onClose, onImport
     const [step, setStep] = useState<'search' | 'preview'>('search');
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearching, setIsSearching] = useState(false);
-    const [searchResults, setSearchResults] = useState<any[]>([]);
     const [selectedField, setSelectedField] = useState<any | null>(null);
     const [previewData, setPreviewData] = useState<Player[]>([]);
     const [loadingPreview, setLoadingPreview] = useState(false);
@@ -38,55 +37,38 @@ const IconikImportModal: React.FC<IconikImportModalProps> = ({ onClose, onImport
             }
 
             const authToken = decryptToken(encryptedToken);
-            const result = await searchIconikFields(appId, authToken, iconikUrl, searchQuery);
 
-            if (result.success && result.data?.objects) {
-                // Filter for drop_down fields as those contain our roster data
-                const fields = result.data.objects.filter((f: any) => f.field_type === 'drop_down');
-                setSearchResults(fields);
-                if (fields.length === 0) setError("No matching roster fields found.");
+            // DIRECT LOOKUP by exact field name
+            const result = await getIconikField(appId, authToken, iconikUrl, searchQuery.trim());
+
+            if (result.success) {
+                const field = result.data;
+                // Only allow drop_down fields
+                if (field.field_type !== 'drop_down') {
+                    setError(`Field found but is type '${field.field_type}', not 'drop_down'. Cannot import.`);
+                    setIsSearching(false);
+                    return;
+                }
+
+                // Field found! Proceed to preview directly.
+                setSelectedField(field); // For title
+
+                const options = field.options || [];
+                const players: Player[] = options.map((opt: any) => ({
+                    name: opt.label,
+                    position: 'Imported' // Default position
+                }));
+
+                setPreviewData(players);
+                setStep('preview');
+
             } else {
-                setError(result.data || "Search failed.");
+                setError("Field not found. Ensure exact metadata field name.");
             }
         } catch (err: any) {
             setError(err.message);
         } finally {
             setIsSearching(false);
-        }
-    };
-
-    const handleSelectField = async (field: any) => {
-        setSelectedField(field);
-        setStep('preview');
-        setLoadingPreview(true);
-        setError(null);
-
-        try {
-            const appId = localStorage.getItem('iconik_app_id');
-            const encryptedToken = localStorage.getItem('iconik_auth_token');
-            const iconikUrl = localStorage.getItem('iconik_url') || 'https://app.iconik.io';
-            const authToken = decryptToken(encryptedToken!);
-
-            // Fetch full field details to get options
-            const result = await getIconikField(appId!, authToken, iconikUrl, field.name);
-
-            if (result.success) {
-                const options = result.data.options || [];
-                // Map Iconik options to Player objects
-                const players: Player[] = options.map((opt: any) => ({
-                    name: opt.label, // Use label as it's the beautiful name
-                    position: 'Imported' // Default position
-                }));
-                setPreviewData(players);
-            } else {
-                setError("Failed to load roster details.");
-                setStep('search');
-            }
-        } catch (err: any) {
-            setError(err.message);
-            setStep('search');
-        } finally {
-            setLoadingPreview(false);
         }
     };
 
@@ -102,7 +84,7 @@ const IconikImportModal: React.FC<IconikImportModalProps> = ({ onClose, onImport
                         </div>
                         <div>
                             <h2 className="text-xl font-bold text-white">Import from Iconik</h2>
-                            <p className="text-xs text-indigo-300">Read existing metadata fields as rosters</p>
+                            <p className="text-xs text-indigo-300">Enter exact metadata field name to import</p>
                         </div>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg transition-colors">
@@ -118,8 +100,9 @@ const IconikImportModal: React.FC<IconikImportModalProps> = ({ onClose, onImport
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
+                                    // Handle Enter key for search
                                     onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                                    placeholder="Search for roster name (e.g. 'Warriors 2024')"
+                                    placeholder="Exact field name (e.g. 'warriors_2024_roster')"
                                     className="input-premium flex-1"
                                     autoFocus
                                 />
@@ -128,7 +111,7 @@ const IconikImportModal: React.FC<IconikImportModalProps> = ({ onClose, onImport
                                     disabled={isSearching}
                                     className="btn-primary w-32"
                                 >
-                                    {isSearching ? <Icons.Loader className="animate-spin w-4 h-4 mx-auto" /> : 'Search'}
+                                    {isSearching ? <Icons.Loader className="animate-spin w-4 h-4 mx-auto" /> : 'Find Field'}
                                 </button>
                             </div>
 
@@ -138,33 +121,13 @@ const IconikImportModal: React.FC<IconikImportModalProps> = ({ onClose, onImport
                                 </div>
                             )}
 
-                            <div className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar">
-                                {searchResults.length === 0 && !isSearching && !error && (
-                                    <div className="text-center text-gray-500 py-10">
-                                        <Icons.Search className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                                        <p>Search for a metadata field to import</p>
-                                    </div>
-                                )}
-
-                                {searchResults.map((field) => (
-                                    <div
-                                        key={field.name}
-                                        onClick={() => handleSelectField(field)}
-                                        className="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-indigo-500/30 cursor-pointer transition-all flex items-center justify-between group"
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-all">
-                                                <Icons.Paste className="w-4 h-4" />
-                                            </div>
-                                            <div>
-                                                <p className="text-white font-medium">{field.label || field.name}</p>
-                                                <p className="text-xs text-gray-500 font-mono">{field.name}</p>
-                                            </div>
-                                        </div>
-                                        <Icons.ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-white transition-colors" />
-                                    </div>
-                                ))}
-                            </div>
+                            {!error && !isSearching && (
+                                <div className="text-center text-gray-500 py-10 opacity-60">
+                                    <Icons.Search className="w-12 h-12 mx-auto mb-3 opacity-20" />
+                                    <p className="text-sm">Enter the system name of the metadata field in Iconik.</p>
+                                    <p className="text-xs mt-1">This is usually lowercase with underscores.</p>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <div className="space-y-6 h-full flex flex-col">
