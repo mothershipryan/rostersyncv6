@@ -538,17 +538,17 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
                                             </div>
                                             <div>
                                                 <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider">AI Model</p>
-                                                <p className="text-sm font-semibold text-white">{roster.data.meta.model}</p>
+                                                <p className="text-base font-semibold text-white">{roster.data.meta.model}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-6">
                                             <div className="text-right">
                                                 <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider">Total Tokens</p>
-                                                <p className="text-base font-mono text-emerald-400 font-bold">{roster.data.meta.totalTokens?.toLocaleString() || 0}</p>
+                                                <p className="text-lg font-mono text-emerald-400 font-bold">{roster.data.meta.totalTokens?.toLocaleString() || 0}</p>
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider">Latency</p>
-                                                <p className="text-base font-mono text-blue-400 font-bold">{(roster.data.meta.latencyMs / 1000).toFixed(2)}s</p>
+                                                <p className="text-lg font-mono text-blue-400 font-bold">{(roster.data.meta.latencyMs / 1000).toFixed(2)}s</p>
                                             </div>
                                         </div>
                                     </div>
