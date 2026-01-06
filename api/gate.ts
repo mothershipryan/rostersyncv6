@@ -111,7 +111,46 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
          return res.status(iconikResponse.status).json(data);
     }
-    // MODE 3: VERIFY/PROXY (Token Auth Check)
+    // MODE 4: EXPLICIT ACTIONS (Search, Read)
+    else if (action && authToken) {
+        const cleanToken = authToken.trim();
+        console.log(`[Gate] Mode: Action '${action}'`);
+        
+        const headers = {
+            'App-ID': cleanAppId,
+            'Auth-Token': cleanToken,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        if (action === 'search_fields') {
+             const searchQuery = body.query || '';
+             // Search for fields. Note: Iconik API for listing fields supports search param
+             targetEndpoint = `${baseUrl}/API/metadata/v1/fields/?search=${encodeURIComponent(searchQuery)}&page_size=100`;
+             fetchOptions = { method: 'GET', headers };
+        } 
+        else if (action === 'read_field') {
+             const fieldName = body.resourceId;
+             if (!fieldName) return res.status(400).json({ error: 'Missing resourceId for read_field' });
+             targetEndpoint = `${baseUrl}/API/metadata/v1/fields/${fieldName}/`;
+             fetchOptions = { method: 'GET', headers };
+        }
+        else {
+            return res.status(400).json({ error: `Unknown action: ${action}` });
+        }
+
+        const iconikResponse = await fetch(targetEndpoint, fetchOptions);
+        const dataText = await iconikResponse.text();
+        let data;
+        try { data = JSON.parse(dataText); } catch { data = { message: 'Non-JSON response', raw: dataText }; }
+        
+        if (!iconikResponse.ok && typeof data === 'object') {
+             (data as any).targetUrl = targetEndpoint;
+        }
+        return res.status(iconikResponse.status).json(data);
+
+    }
+    // MODE 3: VERIFY/PROXY (Token Auth Check) - FALLBACK if no action/payload
     else if (authToken) {
         const cleanToken = authToken.trim();
         targetEndpoint = `${baseUrl}/API/users/me`;

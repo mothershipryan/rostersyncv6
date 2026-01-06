@@ -5,20 +5,20 @@ export interface IconikResponse {
 }
 
 export const testIconikConnection = async (
-    appId: string, 
-    authToken: string, 
+    appId: string,
+    authToken: string,
     iconikUrl: string = 'https://app.iconik.io',
     email?: string,
     password?: string
 ): Promise<IconikResponse> => {
     // We target the new 'gate' endpoint
     const PROXY_URL = '/api/gate';
-    
+
     console.log(`Attempting to connect to proxy at: ${PROXY_URL}`);
 
     try {
         const payload: any = { appId, iconikUrl };
-        
+
         // If credentials provided, send them for login. Otherwise send token for verification.
         if (email && password) {
             payload.email = email;
@@ -41,7 +41,7 @@ export const testIconikConnection = async (
 
             if (!response.ok) {
                 console.warn('Iconik Proxy returned error:', result);
-                
+
                 let errorMessage = "Connection failed.";
 
                 if (response.status === 404) {
@@ -57,11 +57,11 @@ export const testIconikConnection = async (
                 } else if (result.errors) {
                     if (Array.isArray(result.errors)) {
                         const firstError = result.errors[0];
-                        errorMessage = typeof firstError === 'string' 
-                            ? firstError 
+                        errorMessage = typeof firstError === 'string'
+                            ? firstError
                             : firstError?.message || JSON.stringify(firstError);
                     } else {
-                         errorMessage = JSON.stringify(result.errors);
+                        errorMessage = JSON.stringify(result.errors);
                     }
                 } else {
                     errorMessage = `Server Error (${response.status}): ${JSON.stringify(result)}`;
@@ -69,7 +69,7 @@ export const testIconikConnection = async (
 
                 return { success: false, data: errorMessage };
             }
-            
+
             return { success: true, data: result };
         } else {
             const text = await response.text();
@@ -79,9 +79,9 @@ export const testIconikConnection = async (
 
     } catch (error: any) {
         console.error('Iconik Service Network Error:', error);
-        return { 
-            success: false, 
-            data: `Network Error: Unable to reach the backend proxy. ${error.message}` 
+        return {
+            success: false,
+            data: `Network Error: Unable to reach the backend proxy. ${error.message}`
         };
     }
 };
@@ -115,9 +115,9 @@ export const syncRosterToIconik = async (
             if (!response.ok) {
                 console.warn('Iconik Sync Error:', result);
                 let errorMessage = result.error || result.message || "Sync failed";
-                
+
                 if (result.errors) {
-                     errorMessage = Array.isArray(result.errors) 
+                    errorMessage = Array.isArray(result.errors)
                         ? (typeof result.errors[0] === 'string' ? result.errors[0] : JSON.stringify(result.errors[0]))
                         : JSON.stringify(result.errors);
                 }
@@ -132,6 +132,76 @@ export const syncRosterToIconik = async (
         }
     } catch (error: any) {
         console.error('Iconik Sync Network Error:', error);
+        return { success: false, data: error.message };
+    }
+};
+
+export const searchIconikFields = async (
+    appId: string,
+    authToken: string,
+    iconikUrl: string,
+    query: string
+): Promise<IconikResponse> => {
+    const PROXY_URL = '/api/gate';
+
+    try {
+        const body = {
+            appId,
+            authToken,
+            iconikUrl,
+            action: 'search_fields',
+            query
+        };
+
+        const response = await fetch(PROXY_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            return { success: false, data: result.error || "Search failed" };
+        }
+
+        return { success: true, data: result };
+    } catch (error: any) {
+        return { success: false, data: error.message };
+    }
+};
+
+export const getIconikField = async (
+    appId: string,
+    authToken: string,
+    iconikUrl: string,
+    fieldName: string
+): Promise<IconikResponse> => {
+    const PROXY_URL = '/api/gate';
+
+    try {
+        const body = {
+            appId,
+            authToken,
+            iconikUrl,
+            action: 'read_field',
+            resourceId: fieldName
+        };
+
+        const response = await fetch(PROXY_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            return { success: false, data: result.error || "Fetch failed" };
+        }
+
+        return { success: true, data: result };
+    } catch (error: any) {
         return { success: false, data: error.message };
     }
 };

@@ -7,6 +7,7 @@ import MergeModal from './MergeModal';
 import ConfirmationModal from './DeleteConfirmationModal';
 import { decryptToken } from '../services/cryptoService';
 import { syncRosterToIconik } from '../services/iconikService';
+import IconikImportModal from './IconikImportModal';
 
 interface RosterPageProps {
     roster: SavedRoster;
@@ -29,6 +30,7 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
     const [isSyncing, setIsSyncing] = useState(false);
     const [syncSuccess, setSyncSuccess] = useState(false);
     const [mergeSuccess, setMergeSuccess] = useState(false);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [playerToDelete, setPlayerToDelete] = useState<Player | null>(null);
     const [editingPlayer, setEditingPlayer] = useState<{ index: number; originalPlayer: Player; currentPlayer: Player } | null>(null);
 
@@ -233,6 +235,42 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
         }
     };
 
+    const handleImportFromIconik = (importedPlayers: Player[], merge: boolean) => {
+        let finalPlayers = [...importedPlayers];
+
+        if (merge) {
+            const playerMap = new Map<string, Player>();
+            currentPlayers.forEach(p => playerMap.set(p.name.toLowerCase(), p));
+
+            importedPlayers.forEach(p => {
+                const normalized = p.name.toLowerCase();
+                if (!playerMap.has(normalized)) {
+                    playerMap.set(normalized, p);
+                }
+            });
+            finalPlayers = Array.from(playerMap.values());
+        }
+
+        finalPlayers.sort((a, b) => {
+            const lastNameA = a.name.split(' ').pop() || '';
+            const lastNameB = b.name.split(' ').pop() || '';
+            return lastNameA.localeCompare(lastNameB);
+        });
+
+        setCurrentPlayers(finalPlayers);
+
+        const updatedData = { ...roster.data, players: finalPlayers };
+        onUpdate(roster.id, updatedData);
+
+        onAddActivityLog({
+            action: 'Modification',
+            details: `Imported ${importedPlayers.length} players from Iconik (${merge ? 'Merged' : 'Overwritten'})`,
+            status: 'OK'
+        });
+
+        setIsImportModalOpen(false);
+    };
+
     const handleDownloadCSV = () => {
         const headers = "Name,Position";
         const rows = currentPlayers.map(p => `"${p.name}","${p.position}"`).join("\n");
@@ -257,8 +295,8 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
         <button
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${activeTab === tab
-                    ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25'
-                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25'
+                : 'text-gray-400 hover:bg-white/5 hover:text-white'
                 }`}
         >
             {Icon && <Icon className={`w-3.5 h-3.5 ${activeTab === tab ? 'text-white' : 'text-gray-500'}`} />}
@@ -317,6 +355,12 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
                             className="btn-secondary flex items-center gap-2 text-sm"
                         >
                             <Icons.Merge className="w-4 h-4 text-indigo-400" /> Merge Season
+                        </button>
+                        <button
+                            onClick={() => setIsImportModalOpen(true)}
+                            className="btn-secondary flex items-center gap-2 text-sm"
+                        >
+                            <Icons.Cloud className="w-4 h-4 text-purple-400" /> Import
                         </button>
                         <button
                             onClick={handleSyncIconik}
@@ -570,8 +614,8 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
                             <button
                                 onClick={copyJson}
                                 className={`absolute right-6 top-6 z-10 flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl transition-all ${jsonCopied
-                                        ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25'
-                                        : 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500 hover:text-white'
+                                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25'
+                                    : 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500 hover:text-white'
                                     }`}
                             >
                                 {jsonCopied ? <Icons.Check className="w-3.5 h-3.5" /> : <Icons.Copy className="w-3.5 h-3.5" />}
@@ -596,6 +640,13 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
                     currentPlayers={currentPlayers}
                     onClose={() => setIsMergeModalOpen(false)}
                     onConfirmMerge={handleConfirmMerge}
+                />
+            )}
+
+            {isImportModalOpen && (
+                <IconikImportModal
+                    onClose={() => setIsImportModalOpen(false)}
+                    onImport={handleImportFromIconik}
                 />
             )}
 
