@@ -95,7 +95,7 @@ const IconikImportModal: React.FC<IconikImportModalProps> = ({ onClose, onImport
                 <div className="p-6 min-h-[400px]">
                     {step === 'search' ? (
                         <div className="space-y-6">
-                            <div className="flex gap-3">
+                            <div className="flex gap-3 h-12">
                                 <input
                                     type="text"
                                     value={searchQuery}
@@ -103,15 +103,15 @@ const IconikImportModal: React.FC<IconikImportModalProps> = ({ onClose, onImport
                                     // Handle Enter key for search
                                     onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                                     placeholder="Exact field name (e.g. 'warriors_2024_roster')"
-                                    className="input-premium flex-1"
+                                    className="input-premium flex-1 h-full"
                                     autoFocus
                                 />
                                 <button
                                     onClick={handleSearch}
                                     disabled={isSearching}
-                                    className="btn-primary w-32"
+                                    className="btn-primary w-32 h-full flex items-center justify-center"
                                 >
-                                    {isSearching ? <Icons.Loader className="animate-spin w-4 h-4 mx-auto" /> : 'Find Field'}
+                                    {isSearching ? <Icons.Loader className="animate-spin w-4 h-4" /> : 'Find Field'}
                                 </button>
                             </div>
 
@@ -160,14 +160,14 @@ const IconikImportModal: React.FC<IconikImportModalProps> = ({ onClose, onImport
                                     <div className="grid grid-cols-2 gap-4 mt-auto">
                                         <button
                                             onClick={() => onImport(previewData, true, selectedField?.label)}
-                                            className="btn-secondary py-3 justify-center"
+                                            className="btn-secondary h-12 flex items-center justify-center"
                                         >
                                             <Icons.Merge className="w-4 h-4 mr-2" />
                                             Merge into Current
                                         </button>
                                         <button
                                             onClick={() => onImport(previewData, false, selectedField?.label)}
-                                            className="btn-primary py-3 justify-center bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400"
+                                            className="btn-primary h-12 flex items-center justify-center bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400"
                                         >
                                             <Icons.Download className="w-4 h-4 mr-2" />
                                             Overwrite Roster
