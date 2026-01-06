@@ -139,48 +139,48 @@ const WorkflowDemo: React.FC = () => {
     }, [step, visiblePlayers, currentTeam.players.length]);
 
     return (
-        <div className="relative w-full max-w-4xl mx-auto">
+        <div className="relative w-full max-w-3xl mx-auto">
             {/* Main Demo Container */}
-            <div className="glass-card rounded-2xl overflow-hidden shadow-2xl">
+            <div className="glass-card rounded-xl overflow-hidden shadow-2xl">
                 {/* App Header */}
-                <div className="h-12 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-5 gap-4">
-                    <div className="flex space-x-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+                <div className="h-10 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center px-4 gap-3">
+                    <div className="flex space-x-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
                     </div>
-                    <div className="h-5 w-px bg-white/10"></div>
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/20">
-                            <Icons.Search className="w-3.5 h-3.5 text-indigo-400" />
+                    <div className="h-4 w-px bg-white/10"></div>
+                    <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/20">
+                            <Icons.Search className="w-3 h-3 text-indigo-400" />
                         </div>
-                        <span className="text-xs font-semibold text-gray-300 tracking-wide">Dashboard</span>
+                        <span className="text-[10px] font-semibold text-gray-300 tracking-wide">Dashboard</span>
                     </div>
                 </div>
 
                 {/* Content Area */}
-                <div className="relative bg-slate-900/50 min-h-[500px]">
+                <div className="relative bg-slate-900/50 min-h-[420px]">
                     {/* Search Input Section */}
-                    <div className={`p-6 transition-all duration-500 ${step === 'success' ? 'opacity-0 -translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                    <div className={`p-5 transition-all duration-500 ${step === 'success' ? 'opacity-0 -translate-y-4' : 'opacity-100 translate-y-0'}`}>
                         <div className="max-w-3xl mx-auto">
                             <div className="relative">
-                                <div className="absolute left-4 top-1/2 -translate-y-1/2">
-                                    <Icons.Search className={`w-4 h-4 transition-colors duration-300 ${step === 'typing' ? 'text-indigo-400' : 'text-gray-500'}`} />
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                                    <Icons.Search className={`w-3.5 h-3.5 transition-colors duration-300 ${step === 'typing' ? 'text-indigo-400' : 'text-gray-500'}`} />
                                 </div>
                                 <input
                                     type="text"
                                     value={typedText}
                                     readOnly
                                     placeholder="Enter team name to extract roster..."
-                                    className="w-full bg-slate-900/80 border border-white/10 rounded-xl pl-12 pr-36 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40 transition-all duration-300 placeholder-gray-500 text-white text-sm font-medium"
+                                    className="w-full bg-slate-900/80 border border-white/10 rounded-lg pl-10 pr-32 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40 transition-all duration-300 placeholder-gray-500 text-white text-xs font-medium"
                                 />
-                                <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                                <div className="absolute right-1.5 top-1/2 -translate-y-1/2">
                                     {step === 'searching' ? (
-                                        <Icons.Loader className="w-4 h-4 text-indigo-400 animate-spin" />
+                                        <Icons.Loader className="w-3.5 h-3.5 text-indigo-400 animate-spin" />
                                     ) : (
-                                        <button className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-lg shadow-indigo-500/25 flex items-center gap-2">
+                                        <button className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold shadow-lg shadow-indigo-500/25 flex items-center gap-1.5">
                                             <span className="hidden sm:inline">Extract Roster</span>
-                                            <Icons.ChevronRight className="w-4 h-4" />
+                                            <Icons.ChevronRight className="w-3 h-3" />
                                         </button>
                                     )}
                                 </div>
@@ -192,40 +192,40 @@ const WorkflowDemo: React.FC = () => {
                     {step === 'searching' && (
                         <div className="absolute inset-0 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm animate-fade-in">
                             <div className="text-center">
-                                <div className="relative inline-block mb-4">
+                                <div className="relative inline-block mb-3">
                                     <div className="absolute inset-0 bg-indigo-500/30 blur-2xl rounded-full"></div>
-                                    <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center animate-bounce">
-                                        <Icons.Search className="w-8 h-8 text-white" />
+                                    <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center animate-bounce">
+                                        <Icons.Search className="w-6 h-6 text-white" />
                                     </div>
                                 </div>
-                                <p className="text-white font-semibold mb-1">Extracting {currentTeam.name} Roster</p>
-                                <p className="text-gray-400 text-sm">Multi-source verification in progress...</p>
+                                <p className="text-white font-semibold text-sm mb-1">Extracting {currentTeam.name} Roster</p>
+                                <p className="text-gray-400 text-xs">Multi-source verification in progress...</p>
                             </div>
                         </div>
                     )}
 
                     {/* Results View */}
                     {(step === 'results' || step === 'viewing-players' || step === 'saving' || step === 'saved-confirmation' || step === 'syncing') && (
-                        <div className="p-6 animate-fade-in">
+                        <div className="p-5 animate-fade-in">
                             <div className="max-w-3xl mx-auto">
                                 {/* Header with Save Button */}
-                                <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center justify-between mb-5">
                                     <div>
-                                        <h2 className="text-2xl font-bold text-white">{currentTeam.name}</h2>
-                                        <p className="text-gray-400 text-sm mt-1">{currentTeam.league} • {visiblePlayers} players extracted</p>
+                                        <h2 className="text-xl font-bold text-white">{currentTeam.name}</h2>
+                                        <p className="text-gray-400 text-xs mt-0.5">{currentTeam.league} • {visiblePlayers} players extracted</p>
                                     </div>
                                     <button
-                                        className={`btn-primary px-5 py-2.5 flex items-center gap-2 transition-all duration-300 ${step === 'saving' ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
+                                        className={`btn-primary px-4 py-2 flex items-center gap-1.5 transition-all duration-300 text-xs ${step === 'saving' ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
                                             }`}
                                     >
                                         {step === 'saving' ? (
                                             <>
-                                                <Icons.Loader className="w-4 h-4 animate-spin" />
+                                                <Icons.Loader className="w-3.5 h-3.5 animate-spin" />
                                                 <span>Saving...</span>
                                             </>
                                         ) : (
                                             <>
-                                                <Icons.Save className="w-4 h-4" />
+                                                <Icons.Save className="w-3.5 h-3.5" />
                                                 <span>Save to Library</span>
                                             </>
                                         )}
@@ -233,26 +233,26 @@ const WorkflowDemo: React.FC = () => {
                                 </div>
 
                                 {/* Player List */}
-                                <div className="glass-card rounded-2xl overflow-hidden">
-                                    <div className="h-12 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center justify-between px-5">
-                                        <div className="flex items-center gap-2.5">
-                                            <Icons.Library className="w-4 h-4 text-cyan-400" />
-                                            <span className="text-xs font-semibold text-gray-300 tracking-wide">Roster Preview</span>
+                                <div className="glass-card rounded-xl overflow-hidden">
+                                    <div className="h-10 bg-gradient-to-r from-slate-800/80 to-slate-800/40 border-b border-white/5 flex items-center justify-between px-4">
+                                        <div className="flex items-center gap-2">
+                                            <Icons.Library className="w-3.5 h-3.5 text-cyan-400" />
+                                            <span className="text-[10px] font-semibold text-gray-300 tracking-wide">Roster Preview</span>
                                         </div>
-                                        <span className="badge badge-success text-[9px] py-0.5">{visiblePlayers} Found</span>
+                                        <span className="badge badge-success text-[8px] py-0.5">{visiblePlayers} Found</span>
                                     </div>
-                                    <div className="p-5 space-y-2 max-h-[280px] overflow-y-auto custom-scrollbar">
+                                    <div className="p-4 space-y-1.5 max-h-[240px] overflow-y-auto custom-scrollbar">
                                         {currentTeam.players.slice(0, visiblePlayers).map((player, i) => (
                                             <div
                                                 key={i}
-                                                className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-cyan-500/30 transition-all animate-slide-up"
+                                                className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.02] border border-white/5 hover:border-cyan-500/30 transition-all animate-slide-up"
                                                 style={{ animationDelay: `${i * 50}ms` }}
                                             >
-                                                <div className="flex items-center gap-4">
-                                                    <span className="text-xs font-mono font-bold text-cyan-500/50 w-6 text-right">{i + 1}</span>
-                                                    <span className="font-semibold text-gray-200">{player.name}</span>
+                                                <div className="flex items-center gap-3">
+                                                    <span className="text-[10px] font-mono font-bold text-cyan-500/50 w-5 text-right">{i + 1}</span>
+                                                    <span className="font-semibold text-gray-200 text-sm">{player.name}</span>
                                                 </div>
-                                                <span className="text-[10px] font-mono text-gray-500 bg-slate-800 px-2.5 py-1 rounded-lg border border-white/5">
+                                                <span className="text-[9px] font-mono text-gray-500 bg-slate-800 px-2 py-0.5 rounded-lg border border-white/5">
                                                     {player.position}
                                                 </span>
                                             </div>
@@ -262,11 +262,11 @@ const WorkflowDemo: React.FC = () => {
 
                                 {/* Saved Confirmation Toast */}
                                 {step === 'saved-confirmation' && (
-                                    <div className="mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 animate-scale-in">
-                                        <Icons.CheckCircle className="w-5 h-5 text-emerald-400" />
+                                    <div className="mt-3 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2.5 animate-scale-in">
+                                        <Icons.CheckCircle className="w-4 h-4 text-emerald-400" />
                                         <div>
-                                            <p className="text-emerald-300 font-semibold">Roster Saved Successfully!</p>
-                                            <p className="text-emerald-400/70 text-xs mt-0.5">Ready to sync to Iconik</p>
+                                            <p className="text-emerald-300 font-semibold text-sm">Roster Saved Successfully!</p>
+                                            <p className="text-emerald-400/70 text-[10px] mt-0.5">Ready to sync to Iconik</p>
                                         </div>
                                     </div>
                                 )}
@@ -278,15 +278,15 @@ const WorkflowDemo: React.FC = () => {
                     {step === 'syncing' && (
                         <div className="absolute inset-0 flex items-center justify-center bg-slate-900/90 backdrop-blur-sm animate-fade-in">
                             <div className="text-center">
-                                <div className="relative inline-block mb-4">
+                                <div className="relative inline-block mb-3">
                                     <div className="absolute inset-0 bg-purple-500/30 blur-3xl rounded-full"></div>
-                                    <div className="relative glass-card rounded-2xl p-6">
-                                        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-4 mx-auto">
-                                            <Icons.Share2 className="w-8 h-8 text-white animate-bounce" />
+                                    <div className="relative glass-card rounded-xl p-5">
+                                        <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-3 mx-auto">
+                                            <Icons.Share2 className="w-6 h-6 text-white animate-bounce" />
                                         </div>
-                                        <p className="text-white font-bold mb-1">Syncing to Iconik</p>
-                                        <p className="text-gray-400 text-sm mb-4">Uploading metadata field...</p>
-                                        <div className="w-48 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                        <p className="text-white font-bold text-sm mb-0.5">Syncing to Iconik</p>
+                                        <p className="text-gray-400 text-xs mb-3">Uploading metadata field...</p>
+                                        <div className="w-40 h-1.5 bg-slate-800 rounded-full overflow-hidden">
                                             <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 animate-gradient w-full"></div>
                                         </div>
                                     </div>
@@ -299,15 +299,15 @@ const WorkflowDemo: React.FC = () => {
                     {step === 'success' && (
                         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 animate-fade-in">
                             <div className="text-center animate-scale-in">
-                                <div className="relative inline-block mb-6">
+                                <div className="relative inline-block mb-4">
                                     <div className="absolute inset-0 bg-emerald-500/30 blur-3xl rounded-full"></div>
-                                    <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-2xl">
-                                        <Icons.CheckCircle className="w-12 h-12 text-white" />
+                                    <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-2xl">
+                                        <Icons.CheckCircle className="w-8 h-8 text-white" />
                                     </div>
                                 </div>
-                                <h3 className="text-3xl font-bold text-white mb-2">Successfully Synced!</h3>
-                                <p className="text-gray-300 mb-1">{currentTeam.name} roster is now in Iconik</p>
-                                <p className="text-gray-500 text-sm">{currentTeam.players.length} players • Ready for broadcast</p>
+                                <h3 className="text-2xl font-bold text-white mb-1.5">Successfully Synced!</h3>
+                                <p className="text-gray-300 text-sm mb-0.5">{currentTeam.name} roster is now in Iconik</p>
+                                <p className="text-gray-500 text-xs">{currentTeam.players.length} players • Ready for broadcast</p>
                             </div>
                         </div>
                     )}
