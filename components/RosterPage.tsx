@@ -460,7 +460,7 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
 
                             {/* Player List */}
                             <div className="flex-1 overflow-y-auto custom-scrollbar -mr-4 pr-4">
-                                <div className="space-y-2">
+                                <div className="space-y-1">
                                     {currentPlayers.map((player, i) => (
                                         editingPlayer && editingPlayer.index === i ? (
                                             <div key={i} className="flex items-center gap-3 p-3 rounded-xl glass-subtle border border-indigo-500/30 animate-scale-in">
@@ -492,10 +492,10 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
                                         ) : (
                                             <div
                                                 key={i}
-                                                className="text-sm p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-indigo-500/30 hover:bg-indigo-500/5 transition-all flex items-center group gap-4"
+                                                className="text-sm p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-indigo-500/30 hover:bg-indigo-500/5 transition-all flex items-center group gap-3"
                                             >
                                                 <span className="text-xs font-mono font-bold text-indigo-500/40 w-8 text-right">{i + 1}</span>
-                                                <div className="flex-1 flex justify-between items-center gap-4">
+                                                <div className="flex-1 flex justify-between items-center gap-3">
                                                     <span className="font-semibold text-gray-100 group-hover:text-white transition-colors truncate">{player.name}</span>
                                                     <span className="flex-shrink-0 text-[10px] font-mono text-gray-500 bg-slate-800 px-2.5 py-1 rounded-lg border border-white/5 group-hover:border-indigo-500/30 group-hover:text-indigo-400 transition-colors">
                                                         {player.position}
