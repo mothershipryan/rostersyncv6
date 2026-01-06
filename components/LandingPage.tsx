@@ -110,7 +110,7 @@ const AnimatedFlowCard = () => {
     }, [step, typedQuery, currentExample.team]);
 
     return (
-        <div className="relative h-[380px] w-full glass-card rounded-3xl flex flex-col overflow-hidden transition-all duration-700 text-sm group animate-pulse-glow">
+        <div className="relative h-[380px] w-full glass-card rounded-3xl flex flex-col overflow-hidden transition-all duration-700 text-sm group">
             {/* Window Header */}
             <div className={`h-12 border-b transition-all duration-700 flex items-center px-5 justify-between z-10 ${step >= 6 ? 'opacity-0 h-0 border-none' : 'bg-slate-800/80 border-white/5 opacity-100'}`}>
                 <div className="flex items-center gap-4">
@@ -183,7 +183,7 @@ const AnimatedFlowCard = () => {
                 {/* Syncing Animation */}
                 <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${step === 5 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                     <div className="relative">
-                        <div className="absolute inset-0 bg-indigo-500/30 blur-3xl rounded-full animate-pulse"></div>
+                        <div className="absolute inset-0 bg-indigo-500/30 blur-3xl rounded-full"></div>
                         <div className="relative glass-card rounded-3xl p-6 flex flex-col items-center gap-4">
                             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
                                 <Icons.Share2 className="w-6 h-6 text-white animate-bounce" />
