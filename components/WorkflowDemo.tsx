@@ -316,7 +316,7 @@ const WorkflowDemo: React.FC = () => {
                     {step === 'iconik-view' && (
                         <div className="absolute inset-0 bg-[#282c34] animate-fade-in overflow-hidden">
                             {/* Iconik Green Header */}
-                            <div className="h-12 bg-[#45a049] flex items-center px-4 justify-between">
+                            <div className="h-10 bg-[#45a049] flex items-center px-4 justify-between">
                                 <div className="flex items-center gap-2">
                                     <div className="w-7 h-7 rounded bg-white/20 flex items-center justify-center">
                                         <Icons.ChevronDown className="w-4 h-4 text-white" />
@@ -327,66 +327,66 @@ const WorkflowDemo: React.FC = () => {
                             </div>
 
                             {/* Iconik Form Content */}
-                            <div className="p-6 space-y-4 overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(100% - 48px)' }}>
+                            <div className="p-4 space-y-2.5" style={{ maxHeight: 'calc(420px - 40px)' }}>
                                 {/* Label Field */}
-                                <div className="flex items-center gap-4">
-                                    <label className="w-24 text-xs text-gray-400 text-right flex-shrink-0">Label<span className="text-red-400 ml-0.5">*</span></label>
-                                    <div className="flex-1 bg-[#1e2329] text-white text-sm px-4 py-2.5 rounded border border-white/20 font-medium">
+                                <div className="flex items-center gap-3">
+                                    <label className="w-20 text-[10px] text-gray-400 text-right flex-shrink-0">Label<span className="text-red-400 ml-0.5">*</span></label>
+                                    <div className="flex-1 bg-[#1e2329] text-white text-xs px-3 py-2 rounded border border-white/20 font-medium">
                                         {currentTeam.name}
                                     </div>
                                 </div>
 
                                 {/* Multiselect Toggle */}
-                                <div className="flex items-center gap-4">
-                                    <label className="w-24 text-xs text-gray-400 text-right flex-shrink-0">Multiselect</label>
-                                    <div className="w-11 h-6 bg-[#45a049] rounded-full relative cursor-pointer">
-                                        <div className="absolute right-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-lg"></div>
+                                <div className="flex items-center gap-3">
+                                    <label className="w-20 text-[10px] text-gray-400 text-right flex-shrink-0">Multiselect</label>
+                                    <div className="w-10 h-5 bg-[#45a049] rounded-full relative cursor-pointer">
+                                        <div className="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-lg"></div>
                                     </div>
                                 </div>
 
                                 {/* Options Field */}
-                                <div className="flex items-start gap-4">
-                                    <label className="w-24 text-xs text-gray-400 text-right flex-shrink-0 mt-2">Options</label>
-                                    <div className="flex-1 space-y-1">
+                                <div className="flex items-start gap-3">
+                                    <label className="w-20 text-[10px] text-gray-400 text-right flex-shrink-0 mt-1">Options</label>
+                                    <div className="flex-1 space-y-0.5">
                                         {/* Player options - two columns */}
-                                        <div className="space-y-0.5">
+                                        <div className="space-y-0">
                                             {currentTeam.players.map((player, i) => (
-                                                <div key={i} className="grid grid-cols-2 gap-x-3 animate-slide-up" style={{ animationDelay: `${i * 60}ms` }}>
+                                                <div key={i} className="grid grid-cols-2 gap-x-2 animate-slide-up" style={{ animationDelay: `${i * 60}ms` }}>
                                                     {/* Left column - with drag handle */}
-                                                    <div className="flex items-center gap-2 py-2 border-b border-white/10">
-                                                        <Icons.Menu className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
-                                                        <span className="text-xs text-gray-200 truncate">{player.name}</span>
+                                                    <div className="flex items-center gap-1.5 py-1 border-b border-white/10">
+                                                        <Icons.Menu className="w-3 h-3 text-gray-500 flex-shrink-0" />
+                                                        <span className="text-[10px] text-gray-200 truncate">{player.name}</span>
                                                     </div>
                                                     {/* Right column - with delete */}
-                                                    <div className="flex items-center justify-between py-2 border-b border-white/10">
-                                                        <span className="text-xs text-gray-200 truncate">{player.name}</span>
-                                                        <Icons.Close className="w-3.5 h-3.5 text-red-400 flex-shrink-0 cursor-pointer hover:text-red-300" />
+                                                    <div className="flex items-center justify-between py-1 border-b border-white/10">
+                                                        <span className="text-[10px] text-gray-200 truncate">{player.name}</span>
+                                                        <Icons.Close className="w-3 h-3 text-red-400 flex-shrink-0 cursor-pointer hover:text-red-300" />
                                                     </div>
                                                 </div>
                                             ))}
                                         </div>
 
                                         {/* Action buttons */}
-                                        <div className="flex items-center justify-between pt-2">
-                                            <div className="flex items-center gap-2">
-                                                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-white/30 text-gray-300 text-xs font-semibold hover:bg-white/5 transition-colors">
-                                                    <Icons.New className="w-3.5 h-3.5" />
+                                        <div className="flex items-center justify-between pt-1">
+                                            <div className="flex items-center gap-1.5">
+                                                <button className="flex items-center gap-1 px-2 py-1 rounded border border-white/30 text-gray-300 text-[10px] font-semibold hover:bg-white/5 transition-colors">
+                                                    <Icons.New className="w-3 h-3" />
                                                     ADD
                                                 </button>
-                                                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-white/30 text-gray-300 text-xs font-semibold hover:bg-white/5 transition-colors">
-                                                    <Icons.Sort className="w-3.5 h-3.5" />
+                                                <button className="flex items-center gap-1 px-2 py-1 rounded border border-white/30 text-gray-300 text-[10px] font-semibold hover:bg-white/5 transition-colors">
+                                                    <Icons.Sort className="w-3 h-3" />
                                                     ABC
                                                 </button>
                                             </div>
-                                            <span className="text-xs text-gray-500 hover:text-gray-300 cursor-pointer font-medium">SHOW ALL</span>
+                                            <span className="text-[10px] text-gray-500 hover:text-gray-300 cursor-pointer font-medium">SHOW ALL</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Description Field */}
-                                <div className="flex items-center gap-4">
-                                    <label className="w-24 text-xs text-gray-400 text-right flex-shrink-0">Description</label>
-                                    <div className="flex-1 bg-[#1e2329] text-gray-400 text-xs px-4 py-2.5 rounded border border-white/20">
+                                <div className="flex items-center gap-3">
+                                    <label className="w-20 text-[10px] text-gray-400 text-right flex-shrink-0">Description</label>
+                                    <div className="flex-1 bg-[#1e2329] text-gray-400 text-[10px] px-3 py-2 rounded border border-white/20">
                                         Imported via RosterSync from web search
                                     </div>
                                 </div>
