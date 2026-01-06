@@ -528,44 +528,44 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
                     {/* Sources Tab */}
                     {activeTab === 'sources' && (
                         <div className="flex-1 overflow-y-auto custom-scrollbar -mr-4 pr-4 animate-fade-in">
-                            <div className="space-y-8 max-w-4xl mx-auto py-4">
+                            <div className="space-y-4 max-w-4xl mx-auto py-3">
                                 {/* AI Model Stats */}
                                 {roster.data.meta && (
-                                    <div className="glass-subtle rounded-2xl p-5 flex flex-wrap justify-between items-center gap-6">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/20">
-                                                <Icons.Database className="w-6 h-6 text-indigo-400" />
+                                    <div className="glass-subtle rounded-xl p-4 flex flex-wrap justify-between items-center gap-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/20">
+                                                <Icons.Database className="w-5 h-5 text-indigo-400" />
                                             </div>
                                             <div>
-                                                <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">AI Model</p>
-                                                <p className="text-base font-semibold text-white">{roster.data.meta.model}</p>
+                                                <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider">AI Model</p>
+                                                <p className="text-sm font-semibold text-white">{roster.data.meta.model}</p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-8">
+                                        <div className="flex items-center gap-6">
                                             <div className="text-right">
-                                                <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Total Tokens</p>
-                                                <p className="text-lg font-mono text-emerald-400 font-bold">{roster.data.meta.totalTokens?.toLocaleString() || 0}</p>
+                                                <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider">Total Tokens</p>
+                                                <p className="text-base font-mono text-emerald-400 font-bold">{roster.data.meta.totalTokens?.toLocaleString() || 0}</p>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Latency</p>
-                                                <p className="text-lg font-mono text-blue-400 font-bold">{(roster.data.meta.latencyMs / 1000).toFixed(2)}s</p>
+                                                <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider">Latency</p>
+                                                <p className="text-base font-mono text-blue-400 font-bold">{(roster.data.meta.latencyMs / 1000).toFixed(2)}s</p>
                                             </div>
                                         </div>
                                     </div>
                                 )}
 
                                 {/* Verification Notes */}
-                                <div className="glass-card rounded-2xl p-6 border-l-4 border-cyan-500 relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none group-hover:scale-110 transition-transform">
-                                        <Icons.Shield className="w-24 h-24 text-cyan-400" />
+                                <div className="glass-card rounded-xl p-4 border-l-4 border-cyan-500 relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-3 opacity-10 pointer-events-none group-hover:scale-110 transition-transform">
+                                        <Icons.Shield className="w-20 h-20 text-cyan-400" />
                                     </div>
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
-                                            <Icons.Shield className="w-4 h-4 text-cyan-400" />
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <div className="w-7 h-7 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                                            <Icons.Shield className="w-3.5 h-3.5 text-cyan-400" />
                                         </div>
-                                        <p className="text-xs font-semibold text-cyan-400 uppercase tracking-wider">AI Verification Ledger</p>
+                                        <p className="text-[10px] font-semibold text-cyan-400 uppercase tracking-wider">AI Verification Ledger</p>
                                     </div>
-                                    <p className="text-base text-gray-200 leading-relaxed italic relative z-10">
+                                    <p className="text-sm text-gray-200 leading-relaxed italic relative z-10">
                                         "{roster.data.verificationNotes}"
                                     </p>
                                 </div>
