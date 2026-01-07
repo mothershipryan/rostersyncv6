@@ -74,12 +74,19 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                         </div>
                         <div>
                             <h3 className="text-sm font-semibold text-white">{warningTitle}</h3>
-                            <p
-                                className="text-xs text-gray-400 mt-1 leading-relaxed"
-                                dangerouslySetInnerHTML={{
-                                    __html: warningMessage.replace(/\*(.*?)\*/g, '<strong class="text-amber-300">$1</strong>')
-                                }}
-                            />
+                            <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                                {warningMessage.split(/(\*.*?\*)/).map((part, i) => {
+                                    // If part is wrapped in asterisks, make it bold
+                                    if (part.startsWith('*') && part.endsWith('*')) {
+                                        return (
+                                            <strong key={i} className="text-amber-300">
+                                                {part.slice(1, -1)}
+                                            </strong>
+                                        );
+                                    }
+                                    return part;
+                                })}
+                            </p>
                         </div>
                     </div>
                 </div>

@@ -4,15 +4,18 @@ import type { Session, User, SavedRoster, ExtractionResult, ActivityLog } from '
 
 /**
  * Supabase Configuration
- * We use process.env for compatibility with the environment injection.
- * Fallbacks are provided to ensure the app doesn't crash if Vercel variables aren't set yet.
+ * SECURITY: No fallback credentials - environment variables are required
  */
-const supabaseUrl = process.env.VITE_SUPABASE_URL || 'https://yfyclefcfivvonleaymd.supabase.co';
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmeWNsZWZjZml2dm9ubGVheW1kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY5ODY2MDQsImV4cCI6MjA4MjU2MjYwNH0.NLpd3h1fy603jx0dKXRCM3dw7Rlc082LidARVRsIsTY';
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 
-// Log a warning if we are falling back to hardcoded keys
-if (!process.env.VITE_SUPABASE_URL) {
-    console.warn("RosterSync: Using fallback Supabase URL. Please set VITE_SUPABASE_URL in Vercel settings.");
+// Critical validation - fail fast if credentials are missing
+if (!supabaseUrl || !supabaseKey) {
+    throw new Error(
+        'CRITICAL: Supabase credentials not configured. ' +
+        'Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment variables. ' +
+        'For Vercel deployments, add these in Settings > Environment Variables and redeploy.'
+    );
 }
 
 const supabaseClient = createClient(supabaseUrl, supabaseKey);
