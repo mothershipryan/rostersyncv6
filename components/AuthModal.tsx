@@ -21,12 +21,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ initialView, onClose, onAuthSucce
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
 
-    // Check if Supabase is configured
-    const isSupabaseConfigured = !!(import.meta.env.VITE_SUPABASE_URL &&
-        import.meta.env.VITE_SUPABASE_ANON_KEY &&
-        import.meta.env.VITE_SUPABASE_URL !== '' &&
-        !import.meta.env.VITE_SUPABASE_URL.includes('placeholder'));
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -107,49 +101,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ initialView, onClose, onAuthSucce
                         <button
                             onClick={onClose}
                             className="mt-8 w-full btn-secondary"
-                        >
-                            Close
-                        </button>
-                    </div>
-                ) : !isSupabaseConfigured ? (
-                    // Show configuration required message
-                    <div className="text-center py-6">
-                        <div className="relative inline-flex mb-6">
-                            <div className="absolute inset-0 bg-yellow-500 blur-xl opacity-20"></div>
-                            <div className="relative w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                <Icons.Error className="w-8 h-8 text-white" />
-                            </div>
-                        </div>
-                        <h2 className="font-display text-2xl font-bold text-white">Authentication Not Configured</h2>
-                        <p className="text-gray-400 mt-3 text-sm max-w-md mx-auto">
-                            Supabase credentials are required for user authentication.
-                        </p>
-
-                        <div className="mt-6 p-4 rounded-xl bg-slate-800/50 border border-white/10 text-left space-y-3">
-                            <p className="text-xs font-semibold text-gray-300 uppercase tracking-wider">For Vercel Deployment:</p>
-                            <ol className="text-sm text-gray-400 space-y-2 list-decimal list-inside">
-                                <li>Go to your Vercel project settings</li>
-                                <li>Navigate to Settings → Environment Variables</li>
-                                <li>Add these variables:
-                                    <div className="mt-2 p-2 rounded bg-slate-900 font-mono text-xs text-cyan-400">
-                                        VITE_SUPABASE_URL<br />
-                                        VITE_SUPABASE_ANON_KEY
-                                    </div>
-                                </li>
-                                <li>Redeploy your application</li>
-                            </ol>
-                        </div>
-
-                        <div className="mt-4 p-4 rounded-xl bg-slate-800/50 border border-white/10 text-left space-y-2">
-                            <p className="text-xs font-semibold text-gray-300 uppercase tracking-wider">For Local Development:</p>
-                            <p className="text-sm text-gray-400">
-                                Create a <code className="px-1.5 py-0.5 rounded bg-slate-900 text-cyan-400 font-mono text-xs">.env.local</code> file with these variables
-                            </p>
-                        </div>
-
-                        <button
-                            onClick={onClose}
-                            className="mt-6 w-full btn-secondary"
                         >
                             Close
                         </button>
