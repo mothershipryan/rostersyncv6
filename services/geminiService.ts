@@ -61,9 +61,9 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
 
     // Model Strategy: Use available versions to avoid 404 errors
     const models = [
-        "gemini-2.0-flash-exp",
-        "gemini-1.5-flash-latest",
-        "gemini-1.5-flash-8b"
+        "gemini-1.5-flash",
+        "gemini-1.5-pro",
+        "gemini-2.0-flash-exp"
     ];
 
     for (let i = 0; i < models.length; i++) {
@@ -262,9 +262,9 @@ export const generatePlayerTags = async (
 
     // Model Strategy: Use available models for tag generation
     const models = [
-        "gemini-2.0-flash-exp",
-        "gemini-1.5-flash-latest",
-        "gemini-1.5-flash-8b"
+        "gemini-1.5-flash",
+        "gemini-1.5-pro",
+        "gemini-2.0-flash-exp"
     ];
 
     // Build context for better tag generation
