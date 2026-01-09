@@ -5,27 +5,18 @@ import type { Session, User, SavedRoster, ExtractionResult, ActivityLog } from '
 
 /**
  * Supabase Configuration
- * SECURITY: No fallback credentials - environment variables are required for production
- * For development, the app will work without Supabase (roster saving will be disabled)
+ * We use process.env for compatibility with the environment injection.
+ * Fallbacks are provided to ensure the app doesn't crash if Vercel variables aren't set yet.
  */
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl = process.env.VITE_SUPABASE_URL || 'https://yfyclefcfivvonleaymd.supabase.co';
+const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmeWNsZWZjZml2dm9ubGVheW1kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY5ODY2MDQsImV4cCI6MjA4MjU2MjYwNH0.NLpd3h1fy603jx0dKXRCM3dw7Rlc082LidARVRsIsTY';
 
-// Warn if credentials are missing, but don't crash the app
-if (!supabaseUrl || !supabaseKey) {
-    console.warn(
-        '⚠️ Supabase credentials not configured. ' +
-        'Roster saving and user authentication will be disabled. ' +
-        'To enable these features, set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env.local file. ' +
-        'For Vercel deployments, add these in Settings > Environment Variables and redeploy.'
-    );
+// Log a warning if we are falling back to hardcoded keys
+if (!process.env.VITE_SUPABASE_URL) {
+    console.warn("RosterSync: Using fallback Supabase URL. Please set VITE_SUPABASE_URL in Vercel settings.");
 }
 
-// Create client with placeholder values if credentials are missing (for development)
-const supabaseClient = createClient(
-    supabaseUrl || 'https://placeholder.supabase.co',
-    supabaseKey || 'placeholder-key'
-);
+const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
 export const supabaseService = {
     async signUp(email: string, password: string, name: string, company: string): Promise<{ session: Session | null; error: Error | null; requiresConfirmation: boolean }> {
