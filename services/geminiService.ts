@@ -285,7 +285,6 @@ Return ONLY valid JSON. No markdown, no explanation.`;
 
             const config: any = {
                 systemInstruction: TAGS_SYSTEM_INSTRUCTION,
-                tools: [{ googleSearch: {} }],
             };
 
             const response = await ai.models.generateContent({
