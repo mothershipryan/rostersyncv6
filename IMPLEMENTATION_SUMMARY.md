@@ -33,13 +33,9 @@ All requested features have been successfully implemented:
   - Error handling with user alerts
   - Activity log integration
 
-### 4. ✅ Auto-Generate Tags on Extraction
-- **File**: `components/Dashboard.tsx`
-- **Behavior**: Automatically generates tags after roster extraction
-- **Features**:
-  - Non-blocking (runs in background)
-  - Graceful degradation if tag generation fails
-  - Updates roster with enriched data
+### 4. ✅ Manual Tag Generation
+- **Behavior**: Tags are generated only when the user clicks the "Generate Tags" button.
+- **Benefits**: Saves API quota and reduces cross-origin latency for simple extractions.
 
 ### 5. ✅ Iconik Export with `search_aliases` Field
 - **File**: `services/iconikFormatter.ts`
@@ -102,10 +98,8 @@ All requested features have been successfully implemented:
 ### Scenario 1: Extract New Roster
 1. User enters "Los Angeles Lakers" in Dashboard
 2. System extracts roster (15-20 players)
-3. **Tag generation starts automatically in background**
-4. Roster displays immediately
-5. Tags populate within 3-5 seconds
-6. User sees enriched JSON with `playerTags` and `search_aliases`
+3. Roster displays immediately
+4. User can choose to generate tags manually if needed
 
 ### Scenario 2: Manual Tag Generation
 1. User navigates to saved roster

@@ -6,11 +6,11 @@ RosterSync now includes AI-powered search alias generation for athletes to impro
 
 ## Features
 
-### 1. **Automatic Tag Generation on Extraction**
-When you extract a roster, tags are automatically generated in the background using Google's Gemini AI with live web search.
+### 1. **Manual Tag Generation**
+Tags are generated on-demand by clicking the "Generate Tags" button on any roster page. This saves API quota and keeps searches fast.
 
-### 2. **Manual Tag Generation**
-Use the "Generate Tags" button on any saved roster page to generate or regenerate tags for all players.
+### 2. **AI Internal Knowledge**
+The system uses the AI's internal training data rather than searching the web, making tag generation much faster and avoiding rate limits.
 
 ### 3. **Iconik Export Integration**
 Tags are automatically exported to a `search_aliases` metadata field when syncing to Iconik.
@@ -50,8 +50,8 @@ const tags = await generatePlayerTags(
 ### From the Dashboard
 1. Enter a team name (e.g., "Los Angeles Lakers")
 2. Click "Extract"
-3. Tags are automatically generated in the background
-4. View the enriched JSON payload with `playerTags` and `search_aliases` fields
+3. Roster displays immediately
+4. Save the roster to your library, then use the "Generate Tags" button to enrich the data.
 
 ### From a Saved Roster
 1. Navigate to any saved roster
@@ -178,7 +178,7 @@ The system gracefully handles errors:
 
 ✅ **Improved Search**: Users can find athletes by nicknames, misspellings, jersey numbers  
 ✅ **Better UX**: Faster asset retrieval in MAM systems  
-✅ **Automatic**: Tags generated automatically on extraction  
+✅ **Cost-Effective**: No longer consumes search quota for tags  
 ✅ **Flexible**: Can regenerate tags anytime  
 ✅ **MAM-Ready**: Exports directly to Iconik metadata field  
 
