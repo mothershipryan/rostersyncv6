@@ -59,11 +59,11 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     let lastError: any;
 
-    // Model Strategy:
-    // Strictly using gemini-1.5-flash as requested.
+    // Model Strategy: Use available versions to avoid 404 errors
     const models = [
-        "gemini-1.5-flash",
-        "gemini-flash-lite-latest"
+        "gemini-2.0-flash-exp",
+        "gemini-1.5-flash-latest",
+        "gemini-1.5-flash-8b"
     ];
 
     for (let i = 0; i < models.length; i++) {
@@ -260,10 +260,11 @@ export const generatePlayerTags = async (
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     let lastError: any;
 
-    // Model Strategy: Use same approach as extractRoster
+    // Model Strategy: Use available models for tag generation
     const models = [
-        "gemini-1.5-flash",
-        "gemini-flash-lite-latest"
+        "gemini-2.0-flash-exp",
+        "gemini-1.5-flash-latest",
+        "gemini-1.5-flash-8b"
     ];
 
     // Build context for better tag generation
