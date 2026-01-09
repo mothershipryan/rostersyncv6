@@ -3,47 +3,21 @@ import { GoogleGenAI } from "@google/genai";
 import type { ExtractionResult } from "../types";
 
 const SYSTEM_INSTRUCTION = `
-Role: You are a World-Class Sports Data Engineer and Media Asset Management (MAM) Metadata Specialist.
-Objective: Extract high-fidelity athlete roster data from the public web and format it for professional broadcast systems and Digital Asset Management platforms (specifically Iconik).
-
-1. Extraction Capabilities:
-Real-Time Grounding: Use live web search (Google Search) to locate the most recent official player rosters. You must cross-reference at least two independent sources (e.g., the official team website and the league's official statistics portal).
-Identity Verification: Distinguish between active players and non-player staff. You MUST exclude coaches, managers, trainers, and front-office executives. You MUST also extract the player's primary position (e.g., QB, Striker, Goalkeeper, Center).
-
-2. Intelligent Processing Rules:
-Gender Sensitivity (Critical): You must strictly maintain gender distinctions. If the query is for a university or collegiate team (e.g., "Texas Longhorns Basketball"), you must verify if the user wants the Men's or Women's team. If specified, the output name MUST include the gender (e.g., "Texas Longhorns Women's Basketball").
-Traditional Sports Only: Focus exclusively on physical sports (Football, Basketball, Soccer, Baseball, Hockey, etc.). Do not process Esports queries.
-Diacritic Normalization: For compatibility with legacy broadcast systems, you must normalize all names to the standard Latin alphabet. Remove all accents and diacritics (e.g., convert "Sadio Mané" to "Sadio Mane" and "Luka Dončić" to "Luka Doncic").
-Title Stripping: Remove all jersey numbers and injury status markers (IL, IR) from the final name strings. The position should be a separate field.
-
-3. Output Specifications:
-Output must be a RAW JSON object. Do not include markdown formatting (like \`\`\`json).
-The JSON must adhere to this structure:
-{
-  "teamName": "string",
-  "sport": "string",
-  "players": [
-    { "name": "string", "position": "string" }
-  ],
-  "verifiedSources": ["string"],
-  "verificationNotes": "string"
-}
-Iconik Compatibility: Ensure player lists are sorted alphabetically by last name to match the Iconik Metadata Field "Options" standard.
-
-4. Quality Control:
-If a roster cannot be verified across multiple sources, flag it as a "Warning" in your verification notes.
-Prioritize current season data unless a specific historical year is requested in the search query.
+Role: Sports Metadata Specialist for Iconik MAM.
+Task: Extract athlete roster JSON using Google Search.
+Rules:
+1. Cross-ref official team/league sites. Players only (no coaches).
+2. Position required (e.g. QB, Forward).
+3. Gender must match query (Men's/Women's).
+4. Standard Latin alphabet only (no accents/diacritics).
+5. No jersey #s or injury status in names.
+6. Sort: Alphabetical by last name.
+Output Schema: {teamName, sport, players: [{name, position}], verifiedSources, verificationNotes}
 `;
 
 const TAGS_SYSTEM_INSTRUCTION = `
-You are an expert Sports Information Director and Metadata Librarian. Your task is to generate search aliases (tags) for athletes to improve findability in a Media Asset Management (MAM) system.
-
-Guidelines:
-- Provide 5-10 tags per athlete.
-- Include: Common nicknames, phonetic misspellings, jersey numbers (prefixed with #), and historical team abbreviations.
-- Avoid generic terms like "player" or "athlete."
-- Output ONLY a valid JSON object where the key is the Player Name and the value is an array of strings.
-- Strictly no conversational text.
+Task: Generate search aliases (nicknames, common misspellings, jersey #s) for athletes. 5-10 tags per player.
+Output: JSON object { "Player Name": ["tag1", "tag2"] }
 `;
 
 // Utility for backoff delay
@@ -79,8 +53,11 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
             const startTime = Date.now();
             const response = await ai.models.generateContent({
                 model: model,
-                contents: `Extract the roster for: ${teamQuery}. Return ONLY valid JSON.`,
-                config: config,
+                contents: `Extract roster: ${teamQuery}`,
+                config: {
+                    ...config,
+                    generationConfig: { responseMimeType: "application/json" }
+                },
             });
             const endTime = Date.now();
 
@@ -290,7 +267,10 @@ Return ONLY valid JSON. No markdown, no explanation.`;
             const response = await ai.models.generateContent({
                 model: model,
                 contents: prompt,
-                config: config,
+                config: {
+                    ...config,
+                    generationConfig: { responseMimeType: "application/json" }
+                },
             });
 
             if (!response.text) {
