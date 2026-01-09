@@ -12,6 +12,7 @@ export interface Session {
 export interface Player {
     name: string;
     position: string;
+    tags?: string[]; // Search aliases for MAM findability
 }
 
 export interface ExtractionResult {
@@ -20,6 +21,7 @@ export interface ExtractionResult {
     players: Player[];
     verifiedSources: string[];
     verificationNotes: string;
+    playerTags?: Record<string, string[]>; // Optional tags generated for all players
     meta?: {
         model: string;
         totalTokens: number;
@@ -33,7 +35,7 @@ export interface SavedRoster {
     id: string;
     user_id: string;
     team_name: string;
-    sport: string; 
+    sport: string;
     player_names: string[];
     data: ExtractionResult;
     created_at: string;

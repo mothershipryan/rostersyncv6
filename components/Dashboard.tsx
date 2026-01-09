@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import type { ExtractionResult } from '../types';
-import { extractRoster } from '../services/geminiService';
+import { extractRoster, generatePlayerTags } from '../services/geminiService';
 import CommandHub from './CommandHub';
 import ExtractionAnimation from './ExtractionAnimation';
 import { Icons } from './icons';
@@ -31,7 +31,31 @@ const Dashboard: React.FC<DashboardProps> = ({ activeRoster, onSaveRoster, onNew
 
         try {
             const result = await extractRoster(query);
-            onNewExtractionResult(result);
+
+            // Auto-generate tags in the background (non-blocking)
+            generatePlayerTags(
+                result.players.map(p => p.name),
+                result.teamName,
+                result.sport
+            )
+                .then(playerTags => {
+                    // Update the result with tags
+                    const enrichedResult = {
+                        ...result,
+                        playerTags,
+                        players: result.players.map(p => ({
+                            ...p,
+                            tags: playerTags[p.name] || []
+                        }))
+                    };
+                    onNewExtractionResult(enrichedResult);
+                })
+                .catch(err => {
+                    console.warn('Tag generation failed, continuing without tags:', err);
+                    // Still show the result even if tag generation fails
+                    onNewExtractionResult(result);
+                });
+
         } catch (err: any) {
             const message = err.message || "An unknown error occurred.";
             setError(message);

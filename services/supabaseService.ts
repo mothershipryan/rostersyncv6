@@ -1,24 +1,31 @@
 
+
 import { createClient } from '@supabase/supabase-js';
 import type { Session, User, SavedRoster, ExtractionResult, ActivityLog } from '../types';
 
 /**
  * Supabase Configuration
- * SECURITY: No fallback credentials - environment variables are required
+ * SECURITY: No fallback credentials - environment variables are required for production
+ * For development, the app will work without Supabase (roster saving will be disabled)
  */
-const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-// Critical validation - fail fast if credentials are missing
+// Warn if credentials are missing, but don't crash the app
 if (!supabaseUrl || !supabaseKey) {
-    throw new Error(
-        'CRITICAL: Supabase credentials not configured. ' +
-        'Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment variables. ' +
+    console.warn(
+        '⚠️ Supabase credentials not configured. ' +
+        'Roster saving and user authentication will be disabled. ' +
+        'To enable these features, set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env.local file. ' +
         'For Vercel deployments, add these in Settings > Environment Variables and redeploy.'
     );
 }
 
-const supabaseClient = createClient(supabaseUrl, supabaseKey);
+// Create client with placeholder values if credentials are missing (for development)
+const supabaseClient = createClient(
+    supabaseUrl || 'https://placeholder.supabase.co',
+    supabaseKey || 'placeholder-key'
+);
 
 export const supabaseService = {
     async signUp(email: string, password: string, name: string, company: string): Promise<{ session: Session | null; error: Error | null; requiresConfirmation: boolean }> {

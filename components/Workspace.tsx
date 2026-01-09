@@ -14,7 +14,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ roster, onSave }) => {
 
     if (!roster) return null;
 
-    const iconikPayload = formatForIconik(roster);
+    const { rosterField, searchAliasesField } = formatForIconik(roster);
+    const iconikPayload = searchAliasesField
+        ? { rosterField, searchAliasesField }
+        : { rosterField };
 
     const handleCopy = () => {
         navigator.clipboard.writeText(JSON.stringify(iconikPayload, null, 2));

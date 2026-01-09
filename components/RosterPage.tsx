@@ -8,6 +8,7 @@ import ConfirmationModal from './DeleteConfirmationModal';
 import { decryptToken } from '../services/cryptoService';
 import { syncRosterToIconik } from '../services/iconikService';
 import IconikImportModal from './IconikImportModal';
+import { generatePlayerTags } from '../services/geminiService';
 
 interface RosterPageProps {
     roster: SavedRoster;
@@ -33,6 +34,8 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [playerToDelete, setPlayerToDelete] = useState<Player | null>(null);
     const [editingPlayer, setEditingPlayer] = useState<{ index: number; originalPlayer: Player; currentPlayer: Player } | null>(null);
+    const [isGeneratingTags, setIsGeneratingTags] = useState(false);
+    const [tagsGenerated, setTagsGenerated] = useState(false);
 
     useEffect(() => {
         setCurrentPlayers(Array.isArray(roster.data?.players) ? roster.data.players : []);
@@ -205,7 +208,8 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
 
         try {
             const authToken = decryptToken(encryptedToken);
-            const payload = formatForIconik({ ...roster.data, players: currentPlayers });
+            const { rosterField } = formatForIconik({ ...roster.data, players: currentPlayers });
+            const payload = rosterField;
 
             const result = await syncRosterToIconik(appId, authToken, iconikUrl, payload);
 
@@ -271,6 +275,52 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
         setIsImportModalOpen(false);
     };
 
+    const handleGenerateTags = async () => {
+        setIsGeneratingTags(true);
+        setTagsGenerated(false);
+
+        try {
+            const playerNames = currentPlayers.map(p => p.name);
+            const playerTags = await generatePlayerTags(
+                playerNames,
+                roster.team_name,
+                roster.data.sport
+            );
+
+            // Update roster data with generated tags
+            const updatedData = {
+                ...roster.data,
+                playerTags,
+                players: currentPlayers.map(p => ({
+                    ...p,
+                    tags: playerTags[p.name] || []
+                }))
+            };
+
+            onUpdate(roster.id, updatedData);
+
+            onAddActivityLog({
+                action: 'Modification',
+                details: `Generated search aliases for ${Object.keys(playerTags).length} players in "${roster.team_name}"`,
+                status: 'OK'
+            });
+
+            setTagsGenerated(true);
+            setTimeout(() => setTagsGenerated(false), 3000);
+        } catch (error: any) {
+            console.error('Tag generation error:', error);
+            alert(`Failed to generate tags: ${error.message}`);
+
+            onAddActivityLog({
+                action: 'Modification',
+                details: `Failed to generate tags for "${roster.team_name}": ${error.message}`,
+                status: 'ERR'
+            });
+        } finally {
+            setIsGeneratingTags(false);
+        }
+    };
+
     const handleDownloadCSV = () => {
         const headers = "Name,Position";
         const rows = currentPlayers.map(p => `"${p.name}","${p.position}"`).join("\n");
@@ -285,7 +335,8 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
     };
 
     const copyJson = () => {
-        const payload = formatForIconik({ ...roster.data, players: currentPlayers });
+        const { rosterField } = formatForIconik({ ...roster.data, players: currentPlayers });
+        const payload = rosterField;
         navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
         setJsonCopied(true);
         setTimeout(() => setJsonCopied(false), 2000);
@@ -309,7 +360,10 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
         </button>
     );
 
-    const iconikPayload = formatForIconik({ ...roster.data, players: currentPlayers });
+    const { rosterField, searchAliasesField } = formatForIconik({ ...roster.data, players: currentPlayers });
+    const iconikPayload = searchAliasesField
+        ? { rosterField, searchAliasesField }
+        : { rosterField };
 
     return (
         <div className="space-y-4 animate-slide-up">
@@ -361,6 +415,20 @@ const RosterPage: React.FC<RosterPageProps> = ({ roster, onUpdate, onAddActivity
                             className="btn-secondary flex items-center gap-1.5 text-xs px-3 py-2"
                         >
                             <Icons.Cloud className="w-3.5 h-3.5 text-purple-400" /> Import
+                        </button>
+                        <button
+                            onClick={handleGenerateTags}
+                            disabled={isGeneratingTags}
+                            className="btn-secondary flex items-center gap-1.5 text-xs px-3 py-2"
+                        >
+                            {isGeneratingTags ? (
+                                <Icons.Loader className="w-3.5 h-3.5 animate-spin" />
+                            ) : tagsGenerated ? (
+                                <Icons.Check className="w-3.5 h-3.5 text-emerald-400" />
+                            ) : (
+                                <Icons.Activity className="w-3.5 h-3.5 text-yellow-400" />
+                            )}
+                            {isGeneratingTags ? 'Generating...' : (tagsGenerated ? 'Tags Generated!' : 'Generate Tags')}
                         </button>
                         <button
                             onClick={handleSyncIconik}

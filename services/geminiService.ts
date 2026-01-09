@@ -7,7 +7,7 @@ Role: You are a World-Class Sports Data Engineer and Media Asset Management (MAM
 Objective: Extract high-fidelity athlete roster data from the public web and format it for professional broadcast systems and Digital Asset Management platforms (specifically Iconik).
 
 1. Extraction Capabilities:
-Real-Time Grounding: Use live web search (Google Search) to locate the most recent official player rosters. You must cross-reference at least two independent sources (e.g., the official team website and the league’s official statistics portal).
+Real-Time Grounding: Use live web search (Google Search) to locate the most recent official player rosters. You must cross-reference at least two independent sources (e.g., the official team website and the league's official statistics portal).
 Identity Verification: Distinguish between active players and non-player staff. You MUST exclude coaches, managers, trainers, and front-office executives. You MUST also extract the player's primary position (e.g., QB, Striker, Goalkeeper, Center).
 
 2. Intelligent Processing Rules:
@@ -33,6 +33,17 @@ Iconik Compatibility: Ensure player lists are sorted alphabetically by last name
 4. Quality Control:
 If a roster cannot be verified across multiple sources, flag it as a "Warning" in your verification notes.
 Prioritize current season data unless a specific historical year is requested in the search query.
+`;
+
+const TAGS_SYSTEM_INSTRUCTION = `
+You are an expert Sports Information Director and Metadata Librarian. Your task is to generate search aliases (tags) for athletes to improve findability in a Media Asset Management (MAM) system.
+
+Guidelines:
+- Provide 5-10 tags per athlete.
+- Include: Common nicknames, phonetic misspellings, jersey numbers (prefixed with #), and historical team abbreviations.
+- Avoid generic terms like "player" or "athlete."
+- Output ONLY a valid JSON object where the key is the Player Name and the value is an array of strings.
+- Strictly no conversational text.
 `;
 
 // Utility for backoff delay
@@ -226,4 +237,127 @@ export const extractRoster = async (teamQuery: string): Promise<ExtractionResult
 
     // Fallback for other errors
     throw new Error(`AI Service Error (${status || 'Unknown'}): ${errorMessage}`);
+};
+
+/**
+ * Generate search aliases (tags) for athletes to improve findability in MAM systems
+ * @param playerNames - Array of player names to generate tags for
+ * @param teamName - Optional team name for context
+ * @param sport - Optional sport for context
+ * @returns Object mapping player names to arrays of search tags
+ */
+export const generatePlayerTags = async (
+    playerNames: string[],
+    teamName?: string,
+    sport?: string
+): Promise<Record<string, string[]>> => {
+    // Check for API key at runtime
+    if (!process.env.API_KEY || process.env.API_KEY.trim() === '') {
+        console.error("Critical: API_KEY is missing or empty.");
+        throw new Error("API configuration missing. If you are on Vercel, ensure 'API_KEY' is set in Settings > Environment Variables and you have REDEPLOYED the project.");
+    }
+
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
+    // Build context for better tag generation
+    let contextInfo = '';
+    if (teamName || sport) {
+        contextInfo = `\nContext: ${teamName || ''} ${sport || ''}`.trim();
+    }
+
+    const prompt = `Generate search aliases for the following athletes:
+${playerNames.map(name => `- ${name}`).join('\n')}${contextInfo}
+
+Return ONLY valid JSON. No markdown, no explanation.`;
+
+    try {
+        console.log(`[RosterSync] Generating tags for ${playerNames.length} players...`);
+
+        const config: any = {
+            systemInstruction: TAGS_SYSTEM_INSTRUCTION,
+            tools: [{ googleSearch: {} }],
+        };
+
+        const response = await ai.models.generateContent({
+            model: "gemini-1.5-flash",
+            contents: prompt,
+            config: config,
+        });
+
+        if (!response.text) {
+            if (response.promptFeedback && response.promptFeedback.blockReason) {
+                throw new Error(`AI Request blocked: ${response.promptFeedback.blockReason}`);
+            }
+            throw new Error("AI returned an empty response.");
+        }
+
+        // Clean response (strip markdown code blocks)
+        let rawText = response.text.trim();
+        if (rawText.startsWith('```json')) {
+            rawText = rawText.replace(/^```json/, '').replace(/```$/, '');
+        } else if (rawText.startsWith('```')) {
+            rawText = rawText.replace(/^```/, '').replace(/```$/, '');
+        }
+        rawText = rawText.trim();
+
+        // Parse JSON with fallback
+        let result: any;
+        try {
+            result = JSON.parse(rawText);
+        } catch (e) {
+            console.warn(`[RosterSync] Direct JSON parse failed. Attempting substring extraction.`);
+            const firstBrace = rawText.indexOf('{');
+            const lastBrace = rawText.lastIndexOf('}');
+
+            if (firstBrace !== -1 && lastBrace !== -1) {
+                try {
+                    const extractedJson = rawText.substring(firstBrace, lastBrace + 1);
+                    result = JSON.parse(extractedJson);
+                } catch (e2) {
+                    console.error(`[RosterSync] JSON Parse Error. Raw text:`, response.text);
+                    throw new Error("The AI returned data that could not be parsed.");
+                }
+            } else {
+                throw new Error("The AI returned data that could not be parsed.");
+            }
+        }
+
+        // Validate result is an object
+        if (!result || typeof result !== 'object' || Array.isArray(result)) {
+            throw new Error("Invalid response format: expected object mapping player names to tag arrays.");
+        }
+
+        // Validate that values are arrays of strings
+        const validatedResult: Record<string, string[]> = {};
+        for (const [playerName, tags] of Object.entries(result)) {
+            if (Array.isArray(tags)) {
+                validatedResult[playerName] = tags.filter(tag => typeof tag === 'string');
+            }
+        }
+
+        console.log(`[RosterSync] Successfully generated tags for ${Object.keys(validatedResult).length} players.`);
+        return validatedResult;
+
+    } catch (error: any) {
+        const status = error?.status || error?.code;
+        const errorMessage = error?.message || JSON.stringify(error);
+
+        if (status === 403) {
+            throw new Error(`⛔ Access Denied (403). Your API Key is restricted. Please check Google Cloud Console > APIs & Services > Credentials.`);
+        }
+
+        if (status === 400) {
+            throw new Error(`❌ Bad Request (400). The API Key may be invalid or missing required permissions.`);
+        }
+
+        if (status === 429) {
+            throw new Error(`⚠️ Rate Limit Exceeded (429). Your API quota is exhausted. Please wait a moment or check your billing.`);
+        }
+
+        if (status === 503) {
+            throw new Error(`🔄 Service Unavailable (503). Google's AI models are currently experiencing high traffic. Please try again in a moment.`);
+        }
+
+        throw new Error(`AI Service Error (${status || 'Unknown'}): ${errorMessage}`);
+    }
 };
