@@ -258,6 +258,13 @@ export const generatePlayerTags = async (
     }
 
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    let lastError: any;
+
+    // Model Strategy: Use same approach as extractRoster
+    const models = [
+        "gemini-1.5-flash",
+        "gemini-flash-lite-latest"
+    ];
 
     // Build context for better tag generation
     let contextInfo = '';
@@ -270,94 +277,114 @@ ${playerNames.map(name => `- ${name}`).join('\n')}${contextInfo}
 
 Return ONLY valid JSON. No markdown, no explanation.`;
 
-    try {
-        console.log(`[RosterSync] Generating tags for ${playerNames.length} players...`);
-
-        const config: any = {
-            systemInstruction: TAGS_SYSTEM_INSTRUCTION,
-            tools: [{ googleSearch: {} }],
-        };
-
-        const response = await ai.models.generateContent({
-            model: "gemini-1.5-flash",
-            contents: prompt,
-            config: config,
-        });
-
-        if (!response.text) {
-            if (response.promptFeedback && response.promptFeedback.blockReason) {
-                throw new Error(`AI Request blocked: ${response.promptFeedback.blockReason}`);
-            }
-            throw new Error("AI returned an empty response.");
-        }
-
-        // Clean response (strip markdown code blocks)
-        let rawText = response.text.trim();
-        if (rawText.startsWith('```json')) {
-            rawText = rawText.replace(/^```json/, '').replace(/```$/, '');
-        } else if (rawText.startsWith('```')) {
-            rawText = rawText.replace(/^```/, '').replace(/```$/, '');
-        }
-        rawText = rawText.trim();
-
-        // Parse JSON with fallback
-        let result: any;
+    for (let i = 0; i < models.length; i++) {
+        const model = models[i];
         try {
-            result = JSON.parse(rawText);
-        } catch (e) {
-            console.warn(`[RosterSync] Direct JSON parse failed. Attempting substring extraction.`);
-            const firstBrace = rawText.indexOf('{');
-            const lastBrace = rawText.lastIndexOf('}');
+            console.log(`[RosterSync] Generating tags (Attempt ${i + 1}/${models.length}): ${model}`);
 
-            if (firstBrace !== -1 && lastBrace !== -1) {
-                try {
-                    const extractedJson = rawText.substring(firstBrace, lastBrace + 1);
-                    result = JSON.parse(extractedJson);
-                } catch (e2) {
-                    console.error(`[RosterSync] JSON Parse Error. Raw text:`, response.text);
+            const config: any = {
+                systemInstruction: TAGS_SYSTEM_INSTRUCTION,
+                tools: [{ googleSearch: {} }],
+            };
+
+            const response = await ai.models.generateContent({
+                model: model,
+                contents: prompt,
+                config: config,
+            });
+
+            if (!response.text) {
+                if (response.promptFeedback && response.promptFeedback.blockReason) {
+                    throw new Error(`AI Request blocked: ${response.promptFeedback.blockReason}`);
+                }
+                throw new Error("AI returned an empty response.");
+            }
+
+            // Clean response (strip markdown code blocks)
+            let rawText = response.text.trim();
+            if (rawText.startsWith('```json')) {
+                rawText = rawText.replace(/^```json/, '').replace(/```$/, '');
+            } else if (rawText.startsWith('```')) {
+                rawText = rawText.replace(/^```/, '').replace(/```$/, '');
+            }
+            rawText = rawText.trim();
+
+            // Parse JSON with fallback
+            let result: any;
+            try {
+                result = JSON.parse(rawText);
+            } catch (e) {
+                console.warn(`[RosterSync] Direct JSON parse failed. Attempting substring extraction.`);
+                const firstBrace = rawText.indexOf('{');
+                const lastBrace = rawText.lastIndexOf('}');
+
+                if (firstBrace !== -1 && lastBrace !== -1) {
+                    try {
+                        const extractedJson = rawText.substring(firstBrace, lastBrace + 1);
+                        result = JSON.parse(extractedJson);
+                    } catch (e2) {
+                        console.error(`[RosterSync] JSON Parse Error. Raw text:`, response.text);
+                        throw new Error("The AI returned data that could not be parsed.");
+                    }
+                } else {
                     throw new Error("The AI returned data that could not be parsed.");
                 }
-            } else {
-                throw new Error("The AI returned data that could not be parsed.");
+            }
+
+            // Validate result is an object
+            if (!result || typeof result !== 'object' || Array.isArray(result)) {
+                throw new Error("Invalid response format: expected object mapping player names to tag arrays.");
+            }
+
+            // Validate that values are arrays of strings
+            const validatedResult: Record<string, string[]> = {};
+            for (const [playerName, tags] of Object.entries(result)) {
+                if (Array.isArray(tags)) {
+                    validatedResult[playerName] = tags.filter(tag => typeof tag === 'string');
+                }
+            }
+
+            console.log(`[RosterSync] Successfully generated tags for ${Object.keys(validatedResult).length} players using ${model}.`);
+            return validatedResult;
+
+        } catch (error: any) {
+            lastError = error;
+            const status = error.status || error.code;
+            console.warn(`[RosterSync] Model ${model} failed with status ${status}:`, error.message);
+
+            // Critical Auth/Request errors should stop immediately
+            if (status === 400 || status === 403) {
+                break;
+            }
+
+            // Exponential backoff before trying next model
+            if (i < models.length - 1) {
+                const waitTime = Math.pow(2, i + 1) * 1000;
+                console.log(`[RosterSync] Waiting ${Math.round(waitTime)}ms before switching models...`);
+                await delay(waitTime);
             }
         }
-
-        // Validate result is an object
-        if (!result || typeof result !== 'object' || Array.isArray(result)) {
-            throw new Error("Invalid response format: expected object mapping player names to tag arrays.");
-        }
-
-        // Validate that values are arrays of strings
-        const validatedResult: Record<string, string[]> = {};
-        for (const [playerName, tags] of Object.entries(result)) {
-            if (Array.isArray(tags)) {
-                validatedResult[playerName] = tags.filter(tag => typeof tag === 'string');
-            }
-        }
-
-        console.log(`[RosterSync] Successfully generated tags for ${Object.keys(validatedResult).length} players.`);
-        return validatedResult;
-
-    } catch (error: any) {
-        const status = error?.status || error?.code;
-        const errorMessage = error?.message || JSON.stringify(error);
-
-        if (status === 403) {
-            throw new Error(`⛔ Access Denied (403). Your API Key is restricted. Please check Google Cloud Console > APIs & Services > Credentials.`);
-        }
-
-        if (status === 400) {
-            throw new Error(`❌ Bad Request (400). The API Key may be invalid or missing required permissions.`);
-        }
-
-        if (status === 429) {
-            throw new Error(`⚠️ Rate Limit Exceeded (429). Your API quota is exhausted. Please wait a moment or check your billing.`);
-        }
-
-        if (status === 503) {
-            throw new Error(`🔄 Service Unavailable (503). Google's AI models are currently experiencing high traffic. Please try again in a moment.`);
-        }
-
-        throw new Error(`AI Service Error (${status || 'Unknown'}): ${errorMessage}`);
     }
+
+    // Final error reporting
+    const status = lastError?.status || lastError?.code;
+    const errorMessage = lastError?.message || JSON.stringify(lastError);
+
+    if (status === 403) {
+        throw new Error(`⛔ Access Denied (403). Your API Key is restricted. Please check Google Cloud Console > APIs & Services > Credentials.`);
+    }
+
+    if (status === 400) {
+        throw new Error(`❌ Bad Request (400). The API Key may be invalid or missing required permissions.`);
+    }
+
+    if (status === 429) {
+        throw new Error(`⚠️ Rate Limit Exceeded (429). Your API quota is exhausted. Please wait a moment or check your billing.`);
+    }
+
+    if (status === 503) {
+        throw new Error(`🔄 Service Unavailable (503). Google's AI models are currently experiencing high traffic. Please try again in a moment.`);
+    }
+
+    throw new Error(`AI Service Error (${status || 'Unknown'}): ${errorMessage}`);
 };
